@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Supabase Auth + Profiles Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px 0; }
+    label { display:block; margin-top: 12px; font-size: 14px; }
+    input, textarea { width:100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 10px; }
+    button { padding: 10px 14px; border: 0; border-radius: 10px; cursor: pointer; }
+    button.primary { background: #111; color: #fff; }
+    button.ghost { background: #eee; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; }
+    .hint { color:#666; font-size: 13px; }
+    .error { color:#c00; white-space: pre-wrap; }
+    .ok { color:#0a7; white-space: pre-wrap; }
+    code { background:#f6f6f6; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Demo：模板不变，内容进数据库</h1>
+  <p class="hint">这是一个最小示例：用户登录后可编辑自己的 profile（昵称/简介/网站），数据存 Supabase，RLS 保证只能改自己的。</p>
+
+  <div id="status" class="card">
+    <div><strong>当前状态：</strong><span id="who">未登录</span></div>
+    <div class="hint">提示：首次注册可能需要邮箱确认（取决于你 Supabase Auth 设置）。</div>
+    <div id="msg" class="hint"></div>
+  </div>
+
+  <!-- 登录 / 注册 -->
+  <div id="authCard" class="card">
+    <h2>登录 / 注册</h2>
+    <label>Email</label>
+    <input id="email" type="email" placeholder="you@example.com" />
+    <label>Password</label>
+    <input id="password" type="password" placeholder="至少 6 位" />
+    <div class="row" style="margin-top:12px;">
+      <button class="primary" id="btnSignIn">登录</button>
+      <button class="ghost" id="btnSignUp">注册</button>
+    </div>
+    <div class="hint" style="margin-top:10px;">为了简单起见使用邮箱+密码。你也可以换成 Magic Link / OAuth。</div>
+  </div>
+
+  <!-- 编辑内容 -->
+  <div id="appCard" class="card" style="display:none;">
+    <h2>编辑我的内容</h2>
+    <div class="hint">保存后刷新页面，会从数据库读取并显示你自己的内容。</div>
+
+    <label>昵称 display_name</label>
+    <input id="display_name" placeholder="比如：demo" />
+
+    <label>简介 bio</label>
+    <textarea id="bio" rows="4" placeholder="写一段自我介绍"></textarea>
+
+    <label>网站 website</label>
+    <input id="website" placeholder="https://..." />
+
+    <div class="row" style="margin-top:12px;">
+      <button class="primary" id="btnSave">保存</button>
+      <button class="ghost" id="btnLoad">重新加载</button>
+      <button class="ghost" id="btnSignOut">退出登录</button>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="hint">数据库行（只展示你自己的）：</div>
+      <pre id="debug" class="hint" style="overflow:auto;"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    // 1) 填这里
+    const SUPABASE_URL = "https://vhdkmnnejgfsjumvfmtq.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoZGttbm5lamdmc2p1bXZmbXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwODgyMTEsImV4cCI6MjA4NTY2NDIxMX0.b6cXxpHP9f0jSrcML35yJuQbVFAtGTVE1F69HVE7mr8";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // UI helpers
+    const el = (id) => document.getElementById(id);
+    const setMsg = (text, type="hint") => {
+      el("msg").className = type;
+      el("msg").textContent = text || "";
+    };
+    const setWho = (text) => el("who").textContent = text;
+
+    const authCard = el("authCard");
+    const appCard = el("appCard");
+
+    async function refreshUI() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setWho("未登录");
+        authCard.style.display = "";
+        appCard.style.display = "none";
+        setMsg("");
+        return;
+      }
+      setWho(session.user.email + "（已登录）");
+      authCard.style.display = "none";
+      appCard.style.display = "";
+      await loadProfile();
+    }
+
+    async function loadProfile() {
+      setMsg("加载中...");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        setMsg("读取失败：\n" + error.message, "error");
+        return;
+      }
+
+      el("display_name").value = data?.display_name ?? "";
+      el("bio").value = data?.bio ?? "";
+      el("website").value = data?.website ?? "";
+      el("debug").textContent = JSON.stringify(data, null, 2) || "(还没有数据，点击保存会创建)";
+      setMsg("已加载。", "ok");
+    }
+
+    async function saveProfile() {
+      setMsg("保存中...");
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const payload = {
+        id: user.id, // 关键：id 必须等于 auth.uid()，RLS 才会放行
+        display_name: el("display_name").value.trim(),
+        bio: el("bio").value.trim(),
+        website: el("website").value.trim(),
+      };
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .upsert(payload, { onConflict: "id" })
+        .select()
+        .single();
+
+      if (error) {
+        setMsg("保存失败：\n" + error.message, "error");
+        return;
+      }
+
+      el("debug").textContent = JSON.stringify(data, null, 2);
+      setMsg("保存成功。", "ok");
+    }
+
+    // Auth actions
+    el("btnSignUp").addEventListener("click", async () => {
+      setMsg("注册中...");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) return setMsg("注册失败：\n" + error.message, "error");
+      setMsg("注册成功：如果你开启了邮箱确认，请去邮箱点确认链接后再登录。", "ok");
+    });
+
+    el("btnSignIn").addEventListener("click", async () => {
+      setMsg("登录中...");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return setMsg("登录失败：\n" + error.message, "error");
+      setMsg("登录成功。", "ok");
+      await refreshUI();
+    });
+
+    el("btnSignOut").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      setMsg("已退出。");
+      await refreshUI();
+    });
+
+    el("btnSave").addEventListener("click", saveProfile);
+    el("btnLoad").addEventListener("click", loadProfile);
+
+    // 监听登录状态变化
+    supabase.auth.onAuthStateChange(() => refreshUI());
+
+    // 首次进入
+    refreshUI();
+  </script>
+</body>
+</html>
