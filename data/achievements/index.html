@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>成果汇总 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .achievement-detail-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .achievement-detail-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+    .achievement-detail-image {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+    .achievement-detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .achievement-detail-card:hover .achievement-detail-image img {
+      transform: scale(1.1);
+    }
+    .achievement-detail-type {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      z-index: 10;
+    }
+    .achievement-detail-type.project { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+    .achievement-detail-type.publication { background: linear-gradient(135deg, #3498db, #5dade2); }
+    .achievement-detail-type.competition { background: linear-gradient(135deg, #e67e22, #f39c12); }
+    .achievement-detail-type.book { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .achievement-detail-content {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .achievement-detail-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .achievement-detail-meta {
+      color: var(--text-light);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .achievement-detail-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .achievement-detail-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+    .achievement-detail-author {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .achievement-detail-author img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .achievement-detail-author span {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .achievement-detail-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .achievement-detail-link:hover {
+      color: var(--primary-dark);
+    }
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 12px 28px;
+      border: 2px solid var(--border-color);
+      background: #fff;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-btn:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+    .filter-btn.active {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: #fff;
+    }
+    .achievements-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+    @media (max-width: 1200px) {
+      .achievements-detail-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 992px) {
+      .achievements-detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .achievements-detail-grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-buttons {
+        gap: 10px;
+      }
+      .filter-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+    .no-results-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body><!-- 导航栏 -->  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="../achievements/index.html" class="active">成果汇总</a></li>
+        <li><a href="../news/index.html">新闻动态</a></li>
+        <li><a href="../blogs/index.html">技术博客</a></li>
+        <li><a href="../projects/index.html">课题项目</a></li>
+        <li><a href="../papers/index.html">发表论文</a></li>
+      </ul>
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li><a href="../members/index.html">团队成员</a></li>
+        <li><a href="../graduates/index.html">成员去向</a></li>
+        <li><a href="../competitions/index.html">学科竞赛</a></li>
+        <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav><main class="main-content" style="padding-top: 70px;">
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>成果汇总</h2>
+          <p class="section-subtitle">Research Achievements</p>
+        </div>
+
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-type="all">全部成果</button>
+          <button class="filter-btn" data-type="project">课题项目</button>
+          <button class="filter-btn" data-type="publication">发表论文</button>
+          <button class="filter-btn" data-type="competition">学科竞赛</button>
+          <button class="filter-btn" data-type="book">出版刊物</button>
+        </div>
+
+        <div class="achievements-detail-grid" id="achievementsGrid">
+          <!-- 项目 -->
+          <div class="achievement-detail-card" data-type="project">
+            <div class="achievement-detail-image">
+              <img src="../../images/project-1.jpg" alt="智能感知系统" />
+              <div class="achievement-detail-type project">项目</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">基于深度学习的智能感知系统</h3>
+              <div class="achievement-detail-meta">
+                <span>📅 2023-2026</span>
+                <span>📍 国家重点研发计划</span>
+              </div>
+              <p class="achievement-detail-desc">
+                本研究项目旨在开发基于深度学习的智能感知系统，应用于工业检测、自动驾驶等领域，具有重要的理论意义和应用价值。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-1.jpg" alt="张教授" />
+                  <span>负责人：张教授</span>
+                </div>
+                <a href="../projects/project-001.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 论文 -->
+          <div class="achievement-detail-card" data-type="publication">
+            <div class="achievement-detail-image">
+              <img src="../../images/paper-1.jpg" alt="多模态融合" />
+              <div class="achievement-detail-type publication">论文</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">基于多模态融合的图像描述方法研究</h3>
+              <div class="achievement-detail-meta">
+                <span>📄 CVPR 2024</span>
+                <span>⭐ 一作</span>
+              </div>
+              <p class="achievement-detail-desc">
+                提出了一种新颖的多模态融合方法，显著提升了图像描述的性能，在国际顶级会议上获得高度评价。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-2.jpg" alt="李博士" />
+                  <span>作者：李博士</span>
+                </div>
+                <a href="../papers/paper-001.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 竞赛 -->
+          <div class="achievement-detail-card" data-type="competition">
+            <div class="achievement-detail-image">
+              <img src="../../images/award-1.jpg" alt="智能汽车竞赛" />
+              <div class="achievement-detail-type competition">竞赛</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">全国大学生智能汽车竞赛一等奖</h3>
+              <div class="achievement-detail-meta">
+                <span>🏆 国家级</span>
+                <span>📅 2024年</span>
+              </div>
+              <p class="achievement-detail-desc">
+                智能先锋队在本次竞赛中表现优异，凭借创新的算法设计和稳定的系统性能荣获一等奖。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-3.jpg" alt="王同学" />
+                  <span>团队：智能先锋</span>
+                </div>
+                <a href="../competitions/award-001.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 著作 -->
+          <div class="achievement-detail-card" data-type="book">
+            <div class="achievement-detail-image">
+              <img src="../../images/book-1.jpg" alt="深度学习" />
+              <div class="achievement-detail-type book">著作</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">《深度学习原理与应用》</h3>
+              <div class="achievement-detail-meta">
+                <span>📚 清华大学出版社</span>
+                <span>📅 2023年</span>
+              </div>
+              <p class="achievement-detail-desc">
+                系统介绍深度学习的理论原理和实际应用，适合高校师生和工程技术人员阅读参考。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-4.jpg" alt="张教授" />
+                  <span>作者：张教授、刘教授</span>
+                </div>
+                <a href="../publications/book-001.html" class="achievement-detail-link">购买链接 →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 更多示例... -->
+          <div class="achievement-detail-card" data-type="project">
+            <div class="achievement-detail-image">
+              <img src="../../images/project-2.jpg" alt="联邦学习平台" />
+              <div class="achievement-detail-type project">项目</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">联邦学习隐私保护平台</h3>
+              <div class="achievement-detail-meta">
+                <span>📅 2022-2025</span>
+                <span>📍 国家自然科学基金</span>
+              </div>
+              <p class="achievement-detail-desc">
+                构建基于联邦学习的隐私保护平台，解决数据孤岛问题，推动人工智能在各领域的应用。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-5.jpg" alt="陈教授" />
+                  <span>负责人：陈教授</span>
+                </div>
+                <a href="../projects/project-002.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="achievement-detail-card" data-type="publication">
+            <div class="achievement-detail-image">
+              <img src="../../images/paper-2.jpg" alt="图像分割" />
+              <div class="achievement-detail-type publication">论文</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">面向医学图像的语义分割网络</h3>
+              <div class="achievement-detail-meta">
+                <span>📄 IEEE TPAMI</span>
+                <span>⭐ 通讯作者</span>
+              </div>
+              <p class="achievement-detail-desc">
+                提出了一种适用于医学图像的语义分割网络，在多个公开数据集上达到了领先性能。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-6.jpg" alt="赵教授" />
+                  <span>作者：赵教授</span>
+                </div>
+                <a href="../papers/paper-002.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="achievement-detail-card" data-type="competition">
+            <div class="achievement-detail-image">
+              <img src="../../images/award-2.jpg" alt="数学建模" />
+              <div class="achievement-detail-type competition">竞赛</div>
+            </div>
+            <div class="achievement-detail-content">
+              <h3 class="achievement-detail-title">全国大学生数学建模竞赛一等奖</h3>
+              <div class="achievement-detail-meta">
+                <span>🏆 国家级</span>
+                <span>📅 2024年</span>
+              </div>
+              <p class="achievement-detail-desc">
+                团队运用先进的数学建模方法解决实际问题，展现了扎实的理论基础和创新能力。
+              </p>
+              <div class="achievement-detail-footer">
+                <div class="achievement-detail-author">
+                  <img src="../../images/member-7.jpg" alt="周同学" />
+                  <span>团队：数模精英</span>
+                </div>
+                <a href="../competitions/award-002.html" class="achievement-detail-link">查看详情 →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+          <div class="no-results-icon">📂</div>
+          <h3>暂无该类型成果</h3>
+          <p>请选择其他类型查看</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 筛选功能
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const achievementCards = document.querySelectorAll('.achievement-detail-card');
+    const noResults = document.getElementById('noResults');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // 更新按钮状态
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // 筛选内容
+        const type = btn.dataset.type;
+        let visibleCount = 0;
+
+        achievementCards.forEach(card => {
+          if (type === 'all' || card.dataset.type === type) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // 显示/隐藏无结果提示
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      });
+    });
+  </script>
+  <script src="../../js/search.js"></script>
+</body>
+</html>

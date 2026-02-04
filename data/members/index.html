@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>团队成员 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .category-content {
+      padding-top: 70px;
+    }
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    .member-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .member-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+    .member-avatar-wrapper {
+      position: relative;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .member-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+      box-shadow: var(--shadow-md);
+    }
+    .member-info {
+      padding: 25px;
+    }
+    .member-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .member-title {
+      color: var(--primary-color);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+    .member-bio {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .member-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="../achievements/index.html">成果汇总</a></li>
+        <li><a href="../news/index.html">新闻动态</a></li>
+        <li><a href="../blogs/index.html">技术博客</a></li>
+        <li><a href="../projects/index.html">课题项目</a></li>
+        <li><a href="../papers/index.html">发表论文</a></li>
+      </ul>
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li><a href="../members/index.html" class="active">团队成员</a></li>
+        <li><a href="../competitions/index.html">学科竞赛</a></li>
+        <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav><main class="main-content category-content">
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>团队成员</h2>
+          <p class="section-subtitle">Team Members</p>
+        </div>
+        
+        <div id="membersList">
+          <div class="empty">
+            <div class="empty-icon">👥</div>
+            <h3>暂无成员信息</h3>
+            <p>敬请期待</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

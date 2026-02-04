@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>成员去向 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .category-content {
+      padding-top: 70px;
+    }
+    .graduate-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+    }
+    .graduate-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+    .graduate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .graduate-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .graduate-year {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .graduate-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .info-icon {
+      font-size: 18px;
+    }
+    .info-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="../achievements/index.html">成果汇总</a></li>
+        <li><a href="../news/index.html">新闻动态</a></li>
+        <li><a href="../blogs/index.html">技术博客</a></li>
+        <li><a href="../projects/index.html">课题项目</a></li>
+        <li><a href="../papers/index.html">发表论文</a></li>
+      </ul>
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li><a href="../members/index.html">团队成员</a></li>
+        <li><a href="index.html" class="active">成员去向</a></li>
+        <li><a href="../competitions/index.html">学科竞赛</a></li>
+        <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content category-content">
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>成员去向</h2>
+          <p class="section-subtitle">Graduate Career</p>
+        </div>
+        
+        <div id="graduateList">
+          <div class="empty">
+            <div class="empty-icon">🎓</div>
+            <h3>暂无成员去向信息</h3>
+            <p>敬请期待</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>

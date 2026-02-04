@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>成员详情 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .category-content {
+      padding-top: 70px;
+    }
+    .member-detail {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .member-info-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-md);
+    }
+    .member-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+    .member-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--primary-color);
+      box-shadow: var(--shadow-md);
+    }
+    .member-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .member-title {
+      color: var(--primary-color);
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .member-email {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+    .member-bio {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--primary-color);
+    }
+    .achievement-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s ease;
+    }
+    .achievement-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+    .achievement-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .achievement-meta {
+      display: flex;
+      gap: 20px;
+      color: var(--text-light);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .achievement-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .achievement-desc {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    .tag-project { background: linear-gradient(135deg, #27ae60, #2ecc71); color: #fff; }
+    .tag-publication { background: linear-gradient(135deg, #3498db, #5dade2); color: #fff; }
+    .tag-competition { background: linear-gradient(135deg, #e67e22, #f39c12); color: #fff; }
+    .tag-book { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
+    .tag-news { background: linear-gradient(135deg, #00cec9, #0984e3); color: #fff; }
+    .tag-blog { background: linear-gradient(135deg, #06b6d4, #22d3ee); color: #fff; }
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 20px;
+      transition: color 0.3s ease;
+    }
+    .back-link:hover {
+      color: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="../achievements/index.html">成果汇总</a></li>
+        <li><a href="../news/index.html">新闻动态</a></li>
+        <li><a href="../blogs/index.html">技术博客</a></li>
+        <li><a href="../projects/index.html">课题项目</a></li>
+        <li><a href="../papers/index.html">发表论文</a></li>
+      </ul>
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li><a href="../members/index.html" class="active">团队成员</a></li>
+        <li><a href="../competitions/index.html">学科竞赛</a></li>
+        <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav><main class="main-content category-content">
+    <section class="section">
+      <div class="section-container">
+        <a href="index.html" class="back-link">← 返回团队成员</a>
+        
+        <div id="memberInfo" class="member-info-card">
+          <!-- 成员信息将在这里显示 -->
+        </div>
+        
+        <h2 class="section-title">我的成果</h2>
+        <div id="memberAchievements">
+          <!-- 成果将在这里显示 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 从 URL 获取成员 ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const memberId = urlParams.get('id');
+    
+    // 成员数据（应与 index.html 中的数据一致）
+    const members = [];
+    
+    // 加载该成员的所有成果
+    function loadMemberAchievements(authorName) {
+      // 这里将加载各个栏目中作者归属名等于 authorName 的内容
+      // 示例实现：
+      const achievements = [];
+      
+      // 从项目加载
+      // 从论文加载
+      // 从竞赛加载
+      // 从刊物加载
+      
+      return achievements;
+    }
+    
+    function displayMember() {
+      const member = members.find(m => m.id === memberId);
+      const container = document.getElementById('memberInfo');
+      const achievementsContainer = document.getElementById('memberAchievements');
+      
+      if (!member) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">❓</div>
+            <h3>未找到该成员</h3>
+            <p>请返回团队成员列表</p>
+          </div>
+        `;
+        achievementsContainer.innerHTML = '';
+        return;
+      }
+      
+      container.innerHTML = `
+        <div class="member-header">
+          <img src="${member.avatar || '../../lab-logo.png'}" alt="${member.name}" class="member-avatar" />
+          <div>
+            <div class="member-name">${member.name}</div>
+            <div class="member-title">${member.title || ''}</div>
+            ${member.email ? `<div class="member-email">📧 ${member.email}</div>` : ''}
+          </div>
+        </div>
+        ${member.bio ? `<div class="member-bio">${member.bio}</div>` : ''}
+      `;
+      
+      // 加载成果
+      const achievements = loadMemberAchievements(member.authorName);
+      
+      if (achievements.length === 0) {
+        achievementsContainer.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📂</div>
+            <h3>暂无成果</h3>
+            <p>该成员暂无相关成果记录</p>
+          </div>
+        `;
+        return;
+      }
+      
+      achievementsContainer.innerHTML = achievements.map(item => `
+        <div class="achievement-item">
+          <div class="achievement-title">${item.title}</div>
+          <div class="achievement-meta">
+            <span class="tag tag-${item.type}">${item.typeLabel}</span>
+            <span>📅 ${item.date}</span>
+          </div>
+          ${item.desc ? `<div class="achievement-desc">${item.desc}</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    // 页面加载时初始化
+    displayMember();
+  </script>
+</body>
+</html>

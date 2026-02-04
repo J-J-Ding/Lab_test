@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>新闻动态 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .category-content {
+      padding-top: 70px;
+    }
+    .item-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+    }
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+    .item-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+    .item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .item-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .item-content {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .item-link:hover {
+      color: var(--primary-dark);
+    }
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="../../index.html">首页</a></li>
+        <li><a href="../achievements/index.html">成果汇总</a></li>
+        <li><a href="index.html" class="active">新闻动态</a></li>
+        <li><a href="../blogs/index.html">技术博客</a></li>
+        <li><a href="../projects/index.html">课题项目</a></li>
+      </ul>
+      <a href="../../index.html" class="nav-logo">
+        <img src="../../lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li class="nav-dropdown">
+          <a href="../members/index.html">团队成员 ▾</a>
+          <div class="nav-dropdown-content">
+            <a href="../members/index.html">全部成员</a>
+            <a href="../teachers/index.html">师资队伍</a></li>
+            <a href="../students/index.html">学生培养</a>
+          </div>
+        </li>
+        <li><a href="../papers/index.html">发表论文</a></li>
+        <li><a href="../competitions/index.html">学科竞赛</a></li>
+        <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content category-content">
+    <section class="section">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>新闻动态</h2>
+          <p class="section-subtitle">News & Events</p>
+        </div>
+        
+        <div id="contentList">
+          <!-- 新闻卡片 - 每个链接指向单独的内容文件 -->
+          <div class="item-card">
+            <h3 class="item-title">智能系统实验室成立十周年庆典圆满举行</h3>
+            <div class="item-meta">
+              <span>📅 2025-01-01</span>
+              <span>👤 作者：admin</span>
+              <span>📁 分类：新闻动态</span>
+            </div>
+            <p class="item-content">2025年1月1日，智能系统实验室迎来了成立十周年的庆典活动。实验室全体师生欢聚一堂，共同回顾过去十年的辉煌历程...</p>
+            <div class="item-footer">
+              <span></span>
+              <a href="news-001.html" class="item-link">阅读更多 →</a>
+            </div>
+          </div>
+
+          <!-- 更多新闻卡片可以在这里添加 -->
+          <!-- 例如：
+          <div class="item-card">
+            <h3 class="item-title">新闻标题2</h3>
+            <div class="item-meta">
+              <span>📅 日期</span>
+              <span>👤 作者</span>
+            </div>
+            <p class="item-content">新闻摘要...</p>
+            <div class="item-footer">
+              <span></span>
+              <a href="news-002.html" class="item-link">阅读更多 →</a>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../js/search.js"></script>
+</body>
+</html>
