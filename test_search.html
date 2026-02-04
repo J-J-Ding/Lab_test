@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>搜索测试 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <ul class="nav-menu left-menu">
+        <li><a href="data/achievements/index.html">成果汇总</a></li>
+        <li><a href="data/news/index.html">新闻动态</a></li>
+        <li><a href="data/blogs/index.html">技术博客</a></li>
+        <li><a href="data/projects/index.html">课题项目</a></li>
+        <li><a href="data/papers/index.html">发表论文</a></li>
+      </ul>
+      <a href="index.html" class="nav-logo">
+        <img src="lab-logo.png" alt="智能系统实验室" />
+        <span>智能系统实验室</span>
+      </a>
+      <ul class="nav-menu right-menu">
+        <li><a href="data/competitions/index.html">学科竞赛</a></li>
+        <li><a href="data/publications/index.html">出版刊物</a></li>
+        <li><a href="data/members/index.html">团队成员</a></li>
+        <li><a href="data/graduates/index.html">成员去向</a></li>
+        <li><a href="data/activities/index.html">团建活动</a></li>
+        <li class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content" style="padding: 100px 20px; text-align: center;">
+    <section class="section">
+      <div class="section-container">
+        <h2>搜索功能测试</h2>
+        <p style="margin: 30px 0; font-size: 18px; color: var(--text-secondary);">
+          请在上方搜索框中输入关键词进行测试
+        </p>
+        <div style="background: var(--bg-secondary); padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto;">
+          <h3 style="margin-bottom: 20px; color: var(--primary-color);">测试关键词</h3>
+          <ul style="text-align: left; line-height: 2;">
+            <li><strong>DBFNET</strong> - 应该能搜索到论文详情页</li>
+            <li><strong>Junjie_Ding</strong> - 应该能搜索到作者信息</li>
+            <li><strong>Jiangwen_Xiao</strong> - 应该能搜索到作者信息</li>
+            <li><strong>TPAMI</strong> - 应该能搜索到期刊信息</li>
+            <li><strong>renewable</strong> - 应该能搜索到摘要内容</li>
+            <li><strong>forecasting</strong> - 应该能搜索到摘要内容</li>
+            <li><strong>论文</strong> - 应该能搜索到论文列表页</li>
+          </ul>
+          <p style="margin-top: 30px; font-size: 14px; color: var(--text-light);">
+            💡 打开浏览器控制台（F12）可以看到详细的搜索日志
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/search.js"></script>
+</body>
+</html>

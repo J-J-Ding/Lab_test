@@ -1,36 +1,21 @@
-// 全局搜索功能 - 扫描data目录中的内容
+// 全局搜索功能 - 实时搜索data文件夹内容
 (function() {
   'use strict';
 
-  // 搜索结果数据（从各页面标题和描述中提取）
-  let searchData = [];
-
-  // 页面配置：页面路径、标题、描述、分类
-  const PAGE_CONFIG = [
-    { url: 'data/achievements/index.html', title: '成果汇总', desc: '展示实验室所有成果，包括项目、论文、竞赛、刊物等', category: '成果汇总' },
-    { url: 'data/news/index.html', title: '新闻动态', desc: '实验室最新新闻和活动', category: '新闻动态' },
-    { url: 'data/blogs/index.html', title: '技术博客', desc: '实验室成员的技术博客和心得', category: '技术博客' },
-    { url: 'data/projects/index.html', title: '课题项目', desc: '实验室承担的科研项目', category: '课题项目' },
-    { url: 'data/papers/index.html', title: '发表论文', desc: '发表的学术论文', category: '发表论文' },
-    { url: 'data/competitions/index.html', title: '学科竞赛', desc: '参与的各类学科竞赛', category: '学科竞赛' },
-    { url: 'data/publications/index.html', title: '出版刊物', desc: '出版的书籍和刊物', category: '出版刊物' },
-    { url: 'data/activities/index.html', title: '团建活动', desc: '实验室团队建设活动', category: '团建活动' },
-    { url: 'data/members/index.html', title: '团队成员', desc: '实验室全体成员信息', category: '团队成员' },
-    { url: 'data/graduates/index.html', title: '成员去向', desc: '毕业学生去向统计', category: '成员去向' }
-  ];
-
-  // 内容关键词映射
-  const CONTENT_KEYWORDS = [
-    { keywords: ['项目', '科研', '课题', '基金', '研发', '创新'], url: 'data/projects/index.html', title: '课题项目', category: '课题项目' },
-    { keywords: ['论文', '期刊', '发表', 'CVPR', 'ICCV', 'NeurIPS', '会议'], url: 'data/papers/index.html', title: '发表论文', category: '发表论文' },
-    { keywords: ['竞赛', '获奖', '一等奖', '二等奖', '挑战', '比赛'], url: 'data/competitions/index.html', title: '学科竞赛', category: '学科竞赛' },
-    { keywords: ['书', '教材', '出版', '刊物', '专著'], url: 'data/publications/index.html', title: '出版刊物', category: '出版刊物' },
-    { keywords: ['新闻', '动态', '活动', '会议', '庆典', '事件'], url: 'data/news/index.html', title: '新闻动态', category: '新闻动态' },
-    { keywords: ['博客', '技术', '心得', '分享', '文章', '教程'], url: 'data/blogs/index.html', title: '技术博客', category: '技术博客' },
-    { keywords: ['活动', '团建', '聚餐', '旅游', '户外'], url: 'data/activities/index.html', title: '团建活动', category: '团建活动' },
-    { keywords: ['成员', '团队', '老师', '学生', '博士', '硕士', '本科'], url: 'data/members/index.html', title: '团队成员', category: '团队成员' },
-    { keywords: ['成果', '项目', '论文', '竞赛', '刊物', '奖项'], url: 'data/achievements/index.html', title: '成果汇总', category: '成果汇总' },
-    { keywords: ['毕业', '就业', '去向', '工作', '深造', '企业', '高校'], url: 'data/graduates/index.html', title: '成员去向', category: '成员去向' }
+  // 页面内容配置
+  const PAGE_CONFIGS = [
+    { url: 'data/achievements/index.html', title: '成果汇总' },
+    { url: 'data/news/index.html', title: '新闻动态' },
+    { url: 'data/blogs/index.html', title: '技术博客' },
+    { url: 'data/projects/index.html', title: '课题项目' },
+    { url: 'data/papers/index.html', title: '发表论文' },
+    // 论文详情页
+    { url: 'data/papers/DBFNET/index.html', title: 'DBFNET论文详情' },
+    { url: 'data/competitions/index.html', title: '学科竞赛' },
+    { url: 'data/publications/index.html', title: '出版刊物' },
+    { url: 'data/activities/index.html', title: '团建活动' },
+    { url: 'data/members/index.html', title: '团队成员' },
+    { url: 'data/graduates/index.html', title: '成员去向' }
   ];
 
   class GlobalSearch {
@@ -39,27 +24,39 @@
       if (!this.searchInput) return;
 
       this.searchResultsBox = null;
+      this.pageContentCache = null; // 缓存页面内容
+      this.isLoading = false;
       this.init();
     }
 
-    init() {
+    async init() {
+      // 预加载所有页面内容
+      await this.loadPageContents();
+
       // 输入事件
-      this.searchInput.addEventListener('input', this.debounce((e) => {
+      this.searchInput.addEventListener('input', this.debounce(async (e) => {
         const query = this.searchInput.value.trim();
         if (query.length > 0) {
-          this.performSearch(query);
+          await this.performSearch(query);
         } else {
           this.hideResults();
         }
       }, 300));
 
       // 回车键搜索
-      this.searchInput.addEventListener('keypress', (e) => {
+      this.searchInput.addEventListener('keypress', async (e) => {
         if (e.key === 'Enter') {
           const query = this.searchInput.value.trim();
           if (query.length > 0) {
-            this.performSearch(query);
+            await this.performSearchAndNavigate(query);
           }
+        }
+      });
+
+      // 点击搜索框
+      this.searchInput.addEventListener('focus', async () => {
+        if (this.searchInput.value.trim().length > 0) {
+          await this.performSearch(this.searchInput.value.trim());
         }
       });
 
@@ -72,10 +69,171 @@
 
       // 点击页面其他地方隐藏结果
       document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-container')) {
+        if (!e.target.closest('.search-container') && !e.target.closest('.search-results')) {
           this.hideResults();
         }
       });
+
+      // ESC键隐藏
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.hideResults();
+        }
+      });
+    }
+
+    // 加载所有页面内容
+    async loadPageContents() {
+      console.log('开始加载页面内容...');
+      this.pageContentCache = [];
+
+      // 先加载配置的页面
+      for (const page of PAGE_CONFIGS) {
+        try {
+          const response = await fetch(page.url);
+          if (response.ok) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // 提取所有可搜索内容
+            const searchItems = this.extractSearchItems(doc, page.url);
+
+            this.pageContentCache.push({
+              ...page,
+              searchItems: searchItems
+            });
+          }
+        } catch (error) {
+          console.warn(`Failed to load page: ${page.url}`, error);
+        }
+      }
+
+      // 动态发现data文件夹下的所有index.html页面（包括论文详情页）
+      await this.discoverAdditionalPages();
+
+      console.log('页面内容加载完成，共加载', this.pageContentCache.length, '个页面');
+    }
+
+    // 动态发现额外页面
+    async discoverAdditionalPages() {
+      const additionalUrls = [];
+
+      // 发现论文子文件夹
+      const knownPages = new Set(PAGE_CONFIGS.map(p => p.url));
+
+      try {
+        // 尝试加载论文详情页
+        const paperDirs = ['DBFNET']; // 可以扩展这个列表，添加新论文时只需在这里添加目录名
+        for (const dir of paperDirs) {
+          const url = `data/papers/${dir}/index.html`;
+          if (!knownPages.has(url)) {
+            additionalUrls.push({
+              url: url,
+              title: `${dir} - 论文详情`
+            });
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to discover additional pages', error);
+      }
+
+      // 加载发现的额外页面
+      for (const page of additionalUrls) {
+        try {
+          const response = await fetch(page.url);
+          if (response.ok) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            const searchItems = this.extractSearchItems(doc, page.url);
+
+            this.pageContentCache.push({
+              ...page,
+              searchItems: searchItems
+            });
+
+            console.log('发现额外页面:', page.url);
+          }
+        } catch (error) {
+          console.warn(`Failed to load additional page: ${page.url}`, error);
+        }
+      }
+    }
+
+    // 获取所有已知论文目录
+    // 当添加新论文时，只需在此数组中添加论文目录名即可
+    getKnownPaperDirs() {
+      return ['DBFNET'];
+    }
+
+    // 提取可搜索的项目
+    extractSearchItems(doc, pageUrl) {
+      const items = [];
+
+      // 提取标题元素 (h1, h2, h3, h4)
+      doc.querySelectorAll('h1, h2, h3, h4').forEach((h, index) => {
+        const text = h.textContent.trim();
+        if (text && text.length > 0) {
+          items.push({
+            type: '标题',
+            text: text,
+            element: 'h' + h.tagName.charAt(1),
+            priority: 1
+          });
+        }
+      });
+
+      // 提取卡片标题（论文、项目、新闻等）
+      doc.querySelectorAll('.achievement-card h3, .news-item h3, .research-card h3, .item-title, .paper-title, .project-title').forEach((el, index) => {
+        const text = el.textContent.trim();
+        if (text && text.length > 0) {
+          items.push({
+            type: '卡片',
+            text: text,
+            priority: 2
+          });
+        }
+      });
+
+      // 提取作者信息
+      doc.querySelectorAll('.achievement-author, .item-author, .author, .paper-author').forEach((el) => {
+        const text = el.textContent.trim();
+        if (text && text.length > 0 && text !== '作者：' && !text.startsWith('作者:')) {
+          items.push({
+            type: '作者',
+            text: text.replace(/^(作者|Author)[:：]\s*/, ''),
+            priority: 3
+          });
+        }
+      });
+
+      // 提取列表项内容
+      doc.querySelectorAll('li').forEach((el) => {
+        const text = el.textContent.trim();
+        if (text && text.length > 5) {
+          items.push({
+            type: '列表',
+            text: text,
+            priority: 4
+          });
+        }
+      });
+
+      // 提取描述文本
+      doc.querySelectorAll('p, .description, .abstract').forEach((el) => {
+        const text = el.textContent.trim();
+        if (text && text.length > 10 && text.length < 200) {
+          items.push({
+            type: '描述',
+            text: text,
+            priority: 5
+          });
+        }
+      });
+
+      return items;
     }
 
     // 防抖函数
@@ -88,52 +246,69 @@
     }
 
     // 执行搜索
-    performSearch(query) {
-      const results = this.searchPages(query);
+    async performSearch(query) {
+      const results = await this.searchPages(query);
       this.displayResults(results, query);
     }
 
     // 搜索页面
-    searchPages(query) {
-      const queryLower = query.toLowerCase();
+    async searchPages(query) {
+      const queryLower = query.toLowerCase().trim();
+
+      // 如果页面内容还未加载，先加载
+      if (!this.pageContentCache || this.pageContentCache.length === 0) {
+        console.log('页面内容未加载，正在加载...');
+        await this.loadPageContents();
+      }
+
+      console.log('开始搜索:', queryLower, '缓存页面数:', this.pageContentCache.length);
+
       const results = [];
 
-      // 搜索页面标题和描述
-      PAGE_CONFIG.forEach(page => {
-        const titleMatch = page.title.toLowerCase().includes(queryLower);
-        const descMatch = page.desc.toLowerCase().includes(queryLower);
-        const categoryMatch = page.category.toLowerCase().includes(queryLower);
+      this.pageContentCache.forEach(page => {
+        console.log('搜索页面:', page.title, '可搜索项数:', page.searchItems ? page.searchItems.length : 0);
 
-        if (titleMatch || descMatch || categoryMatch) {
-          results.push({
-            title: page.title,
-            desc: page.desc,
-            url: page.url,
-            category: page.category,
-            matchType: titleMatch ? '标题' : (descMatch ? '描述' : '分类')
+        // 搜索所有可搜索项
+        if (page.searchItems) {
+          page.searchItems.forEach(item => {
+            if (item.text && item.text.toLowerCase().includes(queryLower)) {
+              results.push({
+                pageTitle: page.title,
+                pageUrl: page.url,
+                itemType: item.type,
+                matchText: item.text,
+                priority: item.priority
+              });
+            }
           });
         }
       });
 
-      // 根据关键词搜索
-      CONTENT_KEYWORDS.forEach(item => {
-        const keywordMatch = item.keywords.some(kw => kw.includes(queryLower));
-        if (keywordMatch) {
-          // 检查是否已存在
-          const exists = results.some(r => r.url === item.url);
-          if (!exists) {
-            results.push({
-              title: item.title,
-              desc: `包含相关内容: ${query}`,
-              url: item.url,
-              category: item.category,
-              matchType: '关键词'
-            });
-          }
+      // 按优先级排序，同优先级的按相关度排序
+      results.sort((a, b) => {
+        if (a.priority !== b.priority) {
+          return a.priority - b.priority;
         }
+        // 同优先级时，精确匹配优先
+        const aExact = a.matchText.toLowerCase() === queryLower;
+        const bExact = b.matchText.toLowerCase() === queryLower;
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+        return 0;
       });
 
-      return results;
+      // 去重（同一页面同一内容只显示一次）
+      const uniqueResults = [];
+      const seen = new Set();
+      for (const result of results) {
+        const key = `${result.pageUrl}-${result.matchText}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueResults.push(result);
+        }
+      }
+
+      return uniqueResults;
     }
 
     // 显示搜索结果
@@ -146,24 +321,43 @@
         this.searchResultsBox.innerHTML = `
           <div class="search-no-results">
             <div class="no-results-icon">🔍</div>
-            <p>未找到相关内容</p>
-            <p class="no-results-tip">试试搜索：项目、论文、竞赛、新闻、成员...</p>
+            <h3>未找到相关内容</h3>
+            <p class="no-results-keyword">搜索关键词: "${this.escapeHtml(query)}"</p>
+            <p class="no-results-tip">试试搜索其他关键词</p>
           </div>
         `;
         this.showResults();
         return;
       }
 
-      const resultsHtml = results.map(item => `
-        <div class="search-result-item" data-url="${item.url}">
-          <div class="search-result-main">
-            <div class="search-result-title">${this.highlightMatch(item.title, query)}</div>
-            <div class="search-result-desc">${item.desc}</div>
-          </div>
-          <div class="search-result-meta">
-            <span class="search-result-category">${item.category}</span>
-            <span class="search-result-match">匹配: ${item.matchType}</span>
-          </div>
+      // 分组结果，按页面分组
+      const groupedResults = {};
+      results.forEach(result => {
+        if (!groupedResults[result.pageTitle]) {
+          groupedResults[result.pageTitle] = {
+            url: result.pageUrl,
+            items: []
+          };
+        }
+        // 限制每个页面最多显示5条结果
+        if (groupedResults[result.pageTitle].items.length < 5) {
+          groupedResults[result.pageTitle].items.push(result);
+        }
+      });
+
+      const resultsHtml = Object.entries(groupedResults).map(([pageTitle, data]) => `
+        <div class="search-result-group">
+          <div class="search-result-group-title">${this.escapeHtml(pageTitle)}</div>
+          ${data.items.map(item => `
+            <div class="search-result-item" data-url="${data.url}">
+              <div class="search-result-main">
+                <div class="search-result-text">${this.highlightMatch(item.matchText, query)}</div>
+                <div class="search-result-meta">
+                  <span class="search-result-type">${this.escapeHtml(item.itemType)}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
         </div>
       `).join('');
 
@@ -182,8 +376,20 @@
     // 高亮匹配文本
     highlightMatch(text, query) {
       if (!query) return text;
-      const regex = new RegExp(`(${query})`, 'gi');
+      const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
       return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
+
+    // 转义正则特殊字符
+    escapeRegex(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // 转义HTML
+    escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     // 创建结果框
@@ -199,14 +405,14 @@
         style.textContent = `
           #searchResults {
             position: fixed;
-            top: 110px;
-            right: 20px;
+            top: 90px;
+            right: 10px;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            max-width: 450px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            max-width: 350px;
             width: 90%;
-            max-height: 500px;
+            max-height: 450px;
             overflow-y: auto;
             z-index: 1002;
             display: none;
@@ -214,9 +420,9 @@
           }
           #searchResults.show {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: slideDown 0.3s ease;
           }
-          @keyframes fadeIn {
+          @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
           }
@@ -224,10 +430,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-secondary);
             border-radius: 12px 12px 0 0;
+            position: sticky;
+            top: 0;
           }
           .search-results-header span:first-child {
             font-weight: 600;
@@ -235,77 +443,83 @@
             font-size: 14px;
           }
           .close-search {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
             border: none;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             line-height: 1;
           }
           .close-search:hover {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             color: var(--text-primary);
           }
           .search-results-list {
             padding: 10px;
           }
+          .search-result-group {
+            margin-bottom: 12px;
+          }
+          .search-result-group:last-child {
+            margin-bottom: 0;
+          }
+          .search-result-group-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-color);
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 8px;
+          }
           .search-result-item {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid transparent;
+            margin-bottom: 4px;
           }
           .search-result-item:hover {
             background: var(--bg-secondary);
             border-color: var(--primary-color);
           }
           .search-result-main {
-            margin-bottom: 12px;
+            margin-bottom: 4px;
           }
-          .search-result-title {
-            font-size: 16px;
-            font-weight: 600;
+          .search-result-text {
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text-primary);
-            margin-bottom: 8px;
-          }
-          .search-result-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.5;
+            margin-bottom: 6px;
+            line-height: 1.4;
           }
           .search-result-meta {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            font-size: 11px;
+            color: var(--text-light);
           }
-          .search-result-category {
+          .search-result-type {
             background: var(--primary-color);
             color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-          }
-          .search-result-match {
-            font-size: 12px;
-            color: var(--text-light);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
           }
           .search-highlight {
             background: #fef08a;
-            padding: 2px 6px;
+            padding: 2px 4px;
             border-radius: 3px;
+            color: #000;
           }
           .search-no-results {
-            padding: 40px 20px;
+            padding: 30px 20px;
             text-align: center;
           }
           .no-results-icon {
@@ -313,13 +527,42 @@
             margin-bottom: 15px;
             opacity: 0.5;
           }
-          .search-no-results p {
-            margin: 10px 0;
+          .search-no-results h3 {
             color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 15px;
+          }
+          .no-results-keyword {
+            color: var(--primary-color);
+            font-weight: 500;
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 20px;
           }
           .no-results-tip {
-            font-size: 13px;
             color: var(--text-light);
+            font-size: 13px;
+            margin-bottom: 15px;
+          }
+          .suggested-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+          }
+          .suggested-keyword {
+            background: var(--primary-color);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .suggested-keyword:hover {
+            background: var(--primary-dark);
           }
           @media (max-width: 768px) {
             #searchResults {
@@ -327,7 +570,11 @@
               bottom: 10px;
               right: 10px;
               left: 10px;
-              max-height: 60vh;
+              max-height: 50vh;
+            }
+            .suggested-keywords {
+              flex-direction: column;
+              align-items: center;
             }
           }
         `;
@@ -346,6 +593,14 @@
     hideResults() {
       if (this.searchResultsBox) {
         this.searchResultsBox.classList.remove('show');
+      }
+    }
+
+    // 搜索并导航
+    async performSearchAndNavigate(query) {
+      const results = await this.searchPages(query);
+      if (results.length > 0) {
+        window.location.href = results[0].url;
       }
     }
 

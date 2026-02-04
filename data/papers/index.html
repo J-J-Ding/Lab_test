@@ -12,14 +12,42 @@
     .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
     }
     .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+    }
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
     .item-title {
       font-size: 22px;
@@ -51,6 +79,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
     }
     .item-author {
       display: flex;
@@ -81,6 +110,28 @@
       background: linear-gradient(135deg, #3498db, #5dade2);
       color: #fff;
     }
+    .btn-sm {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+    #contentList {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .item-card[data-date] {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
     .empty {
       text-align: center;
       padding: 80px 20px;
@@ -106,9 +157,10 @@
         <span>智能系统实验室</span>
       </a>
       <ul class="nav-menu right-menu">
-        <li><a href="../members/index.html">团队成员</a></li>
         <li><a href="../competitions/index.html">学科竞赛</a></li>
         <li><a href="../publications/index.html">出版刊物</a></li>
+        <li><a href="../members/index.html">团队成员</a></li>
+        <li><a href="../graduates/index.html">成员去向</a></li>
         <li><a href="../activities/index.html">团建活动</a></li>
         <li class="search-container">
           <div class="search-box">
@@ -127,10 +179,54 @@
         </div>
         
         <div id="contentList">
-          <div class="empty">
-            <div class="empty-icon">📄</div>
-            <h3>暂无论文内容</h3>
-            <p>敬请期待</p>
+          <!-- 论文卡片 - 按发表时间排序 -->
+          <div class="item-card" data-date="2026-01">
+            <div class="item-thumbnail">
+              <img src="DBFNET/DBFNET_Framework.png" alt="DBFNET Framework" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+            </div>
+            <div class="item-content-wrapper">
+              <div class="item-title">DBFNET</div>
+              <div class="item-meta">
+                <span>📄 TPAMI</span>
+                <span>📅 2026-01</span>
+              </div>
+              <div class="item-content">
+                Existing renewable power generation forecasting methods mainly focus on a single energy source and fail to effectively capture the spatio-temporal correlation between different power generation...
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <span>👤</span>
+                  <a href="../members/index.html#Junjie_Ding" class="item-link">Junjie_Ding</a>
+                  <span>, </span>
+                  <a href="../members/index.html#Jiangwen_Xiao" class="item-link">Jiangwen_Xiao</a>
+                </div>
+                <a href="DBFNET/index.html" class="btn btn-sm">查看详情</a>
+              </div>
+            </div>
+          </div>
+          <div class="item-card" data-date="2026-01">
+            <div class="item-thumbnail">
+              <img src="DBFNET/DBFNET_Framework.png" alt="DBFNET Framework" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+            </div>
+            <div class="item-content-wrapper">
+              <div class="item-title">DBFNET</div>
+              <div class="item-meta">
+                <span>📄 TPAMI</span>
+                <span>📅 2026-01</span>
+              </div>
+              <div class="item-content">
+                Existing renewable power generation forecasting methods mainly focus on a single energy source and fail to effectively capture the spatio-temporal correlation between different power generation...
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <span>👤</span>
+                  <a href="../members/index.html#Junjie_Ding" class="item-link">Junjie_Ding</a>
+                  <span>, </span>
+                  <a href="../members/index.html#Jiangwen_Xiao" class="item-link">Jiangwen_Xiao</a>
+                </div>
+                <a href="DBFNET/index.html" class="btn btn-sm">查看详情</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

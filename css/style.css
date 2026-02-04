@@ -108,7 +108,7 @@ body {
 .nav-menu li a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   padding: 8px 14px;
   border-radius: 6px;
   transition: all 0.3s ease;
@@ -159,8 +159,8 @@ body {
   border-radius: 25px;
   padding: 8px 20px 8px 45px;
   transition: all 0.3s ease;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 120px;
+  max-width: 180px;
 }
 
 .search-box:focus-within {
