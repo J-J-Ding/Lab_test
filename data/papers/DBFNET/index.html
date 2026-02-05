@@ -9,35 +9,9 @@
   
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <ul class="nav-menu left-menu">
-        <li><a href="../../achievements/index.html">成果汇总</a></li>
-        <li><a href="../../news/index.html">新闻动态</a></li>
-        <li><a href="../../blogs/index.html">技术博客</a></li>
-        <li><a href="../../projects/index.html">课题项目</a></li>
-        <li><a href="../index.html" class="active">发表论文</a></li>
-      </ul>
-      <a href="../../../index.html" class="nav-logo">
-        <img src="../../../lab-logo.png" alt="智能系统实验室" />
-        <span>智能系统实验室</span>
-      </a>
-      <ul class="nav-menu right-menu">
-        <li><a href="../../competitions/index.html">学科竞赛</a></li>
-        <li><a href="../../publications/index.html">出版刊物</a></li>
-        <li><a href="../../members/index.html">团队成员</a></li>
-        <li><a href="../../graduates/index.html">成员去向</a></li>
-        <li><a href="../../activities/index.html">团建活动</a></li>
-        <li class="search-container">
-          <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="globalSearch" placeholder="搜索..." />
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
+  <!-- 统一导航栏 -->
+  <div id="navbar-container"></div>
+  
   <main class="main-content">
     <section class="section">
       <div class="section-container">
@@ -56,14 +30,14 @@
             </div>
 
             <div class="paper-meta">
-              <div class="paper-meta-item">
+              <!-- <div class="paper-meta-item">
                 <span class="paper-meta-label">📄</span>
                 <span class="paper-meta-value">TPAMI</span>
-              </div>
-              <div class="paper-meta-item">
+              </div> -->
+              <!-- <div class="paper-meta-item">
                 <span class="paper-meta-label">📅</span>
                 <span class="paper-meta-value">2026-01</span>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -214,5 +188,7 @@
       });
     }
   </script>
+  <script src="../../../js/navbar-loader.js"></script>
+
 </body>
 </html>
