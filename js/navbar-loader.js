@@ -1,4 +1,4 @@
-// 智能导航栏加载器 - 基于相对路径的灵活计算
+// 智能导航栏加载器 - 兼容本地和HTTP环境
 function loadNavbar() {
     const navbarContainer = document.getElementById('navbar-container');
     if (!navbarContainer) {
@@ -10,13 +10,17 @@ function loadNavbar() {
     const currentPath = window.location.pathname;
     const pathSegments = currentPath.split('/').filter(Boolean);
     const pathDepth = pathSegments.length;
-    
+
     // 计算导航栏文件的相对路径
     let navbarPath = calculateNavbarPath(pathDepth, pathSegments);
-    
+
     console.log('当前路径:', currentPath, '层级:', pathDepth, '导航栏路径:', navbarPath);
 
-    fetch(navbarPath)
+    // 使用绝对URL路径避免CORS问题
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+    const navbarUrl = baseUrl + navbarPath;
+
+    fetch(navbarUrl, { cache: 'no-store' })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -25,41 +29,60 @@ function loadNavbar() {
         })
         .then(html => {
             navbarContainer.innerHTML = html;
-            
+
             // 修正导航栏中的所有链接路径
             fixAllNavbarLinks(pathDepth);
-            
+
             // 设置当前页面的激活状态
             setActiveNavItem();
-            
+
             // 初始化搜索功能
             initializeSearch();
         })
         .catch(error => {
             console.error('加载导航栏失败:', error);
-            navbarContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">导航栏加载失败，请检查网络连接</div>';
+            console.error('尝试的URL:', navbarUrl);
+            // 显示更详细的错误信息
+            navbarContainer.innerHTML = `
+                <div style="padding: 20px; text-align: center; color: #666; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; margin: 10px;">
+                    <strong>导航栏加载失败</strong><br>
+                    <small>路径: ${navbarPath}</small><br>
+                    <small>错误: ${error.message}</small>
+                </div>`;
         });
 }
 
 // 计算导航栏文件的相对路径
 function calculateNavbarPath(pathDepth, pathSegments) {
-    // 导航栏文件始终位于 data/navbar-unified.html
-    // 需要计算从当前页面到该文件的相对路径
-    
-    if (pathDepth === 0 || (pathDepth === 1 && pathSegments[0] === 'index.html')) {
-        // 根目录页面
+    // 查找data目录的位置
+    let dataIndex = -1;
+    for (let i = 0; i < pathSegments.length; i++) {
+        if (pathSegments[i] === 'data') {
+            dataIndex = i;
+            break;
+        }
+    }
+
+    // 根据不同的环境计算路径
+    if (dataIndex === -1) {
+        // 根目录页面 (index.html)
         return 'data/navbar-unified.html';
     } else {
-        // 计算需要返回多少层才能到达根目录
-        const backToRoot = pathDepth;
-        
-        // 从根目录再进入data目录
+        // data目录或其子目录下的页面
+        // 计算从当前页面回退到data目录的层数
+        // 例如: /Lab_test/data/papers/index.html
+        // pathSegments = ['Lab_test', 'data', 'papers', 'index.html']
+        // pathDepth = 4, dataIndex = 1
+        // data目录深度 = dataIndex + 1 = 2
+        // 需要回退: 4 - 2 = 2层
+        const dataDepth = dataIndex + 1;
+        const levelsToData = pathDepth - dataDepth;
+
         let relativePath = '';
-        for (let i = 0; i < backToRoot; i++) {
+        for (let i = 0; i < levelsToData; i++) {
             relativePath += '../';
         }
-        
-        return relativePath + 'data/navbar-unified.html';
+        return relativePath + 'navbar-unified.html';
     }
 }
 
@@ -88,7 +111,20 @@ function calculateNavbarPath(pathDepth, pathSegments) {
 // }
 
 function fixAllNavbarLinks(pathDepth) {
-    // 更严格的“不要改写”的判断：外链/协议链接/锚点都跳过
+    // 获取当前页面信息
+    const currentPath = window.location.pathname;
+    const pathSegments = currentPath.split('/').filter(Boolean);
+
+    // 查找data目录的位置
+    let dataIndex = -1;
+    for (let i = 0; i < pathSegments.length; i++) {
+        if (pathSegments[i] === 'data') {
+            dataIndex = i;
+            break;
+        }
+    }
+
+    // 更严格的"不要改写"的判断：外链/协议链接/锚点都跳过
     function shouldRewrite(href) {
         if (!href) return false;
         if (href.startsWith('#')) return false;                 // #anchor
@@ -97,7 +133,7 @@ function fixAllNavbarLinks(pathDepth) {
         return true;
     }
 
-    // 统一把 href 变成“站内相对路径”再交给 calculateRelativePath
+    // 统一把 href 变成"站内相对路径"再交给 calculateRelativePath
     function toInternalTarget(href) {
         // 去掉开头的 /，避免 GitHub Pages 项目页下被解析到域名根
         let p = href.replace(/^\/+/, "");
@@ -128,7 +164,7 @@ function fixAllNavbarLinks(pathDepth) {
     navLinks.forEach(link => {
         const originalHref = link.getAttribute('href');
 
-        // ✅ 不要只判断 startsWith('http')，要判断“所有协议/外链/锚点”
+        // ✅ 不要只判断 startsWith('http')，要判断"所有协议/外链/锚点"
         if (!shouldRewrite(originalHref)) return;
 
         // 只改写站内页面：统一转成 data/xxx 再算相对路径
@@ -140,15 +176,42 @@ function fixAllNavbarLinks(pathDepth) {
 }
 
 
-// 计算相对路径
+// 计算相对路径 - 优化为基于data目录的准确计算
 function calculateRelativePath(targetPath, currentDepth) {
-    if (currentDepth === 0 || currentDepth === 1) {
+    const currentPath = window.location.pathname;
+    const pathSegments = currentPath.split('/').filter(Boolean);
+
+    // 查找data目录的位置
+    let dataIndex = -1;
+    for (let i = 0; i < pathSegments.length; i++) {
+        if (pathSegments[i] === 'data') {
+            dataIndex = i;
+            break;
+        }
+    }
+
+    if (dataIndex === -1) {
         // 根目录页面，直接使用目标路径
         return targetPath;
     } else {
-        // 计算需要返回多少层才能到达根目录
+        // data目录或其子目录下的页面
+        // 计算从当前页面回退到data目录的层数
+        // 例如: /Lab_test/data/papers/index.html
+        // pathSegments = ['Lab_test', 'data', 'papers', 'index.html']
+        // currentDepth = 4, dataIndex = 1
+        // data目录深度 = 2
+        // 需要回退: 4 - 2 = 2层
+
+        const dataDepth = dataIndex + 1;
+        const levelsToData = currentDepth - dataDepth;
+
+        // 如果目标路径以data/开头，去掉它因为我们已经在data目录下
+        if (targetPath.startsWith('data/')) {
+            targetPath = targetPath.substring(5);
+        }
+
         let relativePath = '';
-        for (let i = 0; i < currentDepth; i++) {
+        for (let i = 0; i < levelsToData; i++) {
             relativePath += '../';
         }
         return relativePath + targetPath;
@@ -210,13 +273,13 @@ function setActiveNavItem() {
     // 用 URL 解析相对路径，避免层级深时匹配失真
     const linkPath = normalizePath(new URL(href, window.location.origin).pathname);
 
-    // 评分：优先“完全相等”，其次“前缀命中（栏目/目录）”，且选最长命中
+    // 评分：优先"完全相等"，其次"前缀命中（栏目/目录）"，且选最长命中
     let score = -1;
 
     if (currentPath === linkPath) {
       score = 1_000_000 + linkPath.length; // 完全命中最大
     } else {
-      // 前缀命中要做“边界判断”，避免 /data 匹配到 /database
+      // 前缀命中要做"边界判断"，避免 /data 匹配到 /database
       const isPrefix =
         linkPath !== '/' &&
         currentPath.startsWith(linkPath) &&
