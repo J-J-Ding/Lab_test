@@ -82,7 +82,7 @@ function calculateNavbarPath(pathDepth, pathSegments) {
         for (let i = 0; i < levelsToData; i++) {
             relativePath += '../';
         }
-        return relativePath + 'navbar-unified.html';
+        return relativePath + 'data/navbar-unified.html';
     }
 }
 
