@@ -30,14 +30,18 @@ function loadNavbar() {
         .then(html => {
             navbarContainer.innerHTML = html;
 
-            // 修正导航栏中的所有链接路径
-            fixAllNavbarLinks(pathDepth);
+            // 使用 requestAnimationFrame 确保 DOM 已完全渲染
+            requestAnimationFrame(() => {
+                // 修正导航栏中的所有链接路径
+                console.log('[loadNavbar] 开始修正导航栏链接');
+                fixAllNavbarLinks(pathDepth);
 
-            // 设置当前页面的激活状态
-            setActiveNavItem();
+                // 设置当前页面的激活状态
+                setActiveNavItem();
 
-            // 初始化搜索功能
-            initializeSearch();
+                // 初始化搜索功能
+                initializeSearch();
+            });
         })
         .catch(error => {
             console.error('加载导航栏失败:', error);
@@ -149,14 +153,34 @@ function fixAllNavbarLinks(pathDepth) {
 
     // 修正logo链接
     const logoLink = document.querySelector('.nav-logo');
+    console.log('[fixAllNavbarLinks] 查找 logoLink:', !!logoLink);
     if (logoLink) {
-        logoLink.setAttribute('href', calculateRelativePath('index.html', pathDepth));
+        try {
+            const logoHref = calculateRelativePath('index.html', pathDepth);
+            console.log('==== Logo 修正 ====');
+            console.log('修正logo链接 href:', logoHref);
+            const fullHref = new URL(logoHref, window.location.href).href;
+            console.log('解析后的完整URL:', fullHref);
+            logoLink.setAttribute('href', logoHref);
+        } catch (e) {
+            console.error('修正logo链接失败:', e);
+        }
     }
 
     // 修正logo图片
     const logoImg = document.querySelector('.nav-logo img');
+    console.log('[fixAllNavbarLinks] 查找 logoImg:', !!logoImg);
     if (logoImg) {
-        logoImg.setAttribute('src', calculateRelativePath('lab-logo.png', pathDepth));
+        try {
+            const logoSrc = calculateRelativePath('lab-logo.png', pathDepth);
+            console.log('修正logo图片 src:', logoSrc);
+            console.log('当前页面URL:', window.location.href);
+            const actualImgUrl = new URL(logoSrc, window.location.href).href;
+            console.log('实际图片URL:', actualImgUrl);
+            logoImg.setAttribute('src', logoSrc);
+        } catch (e) {
+            console.error('修正logo图片失败:', e);
+        }
     }
 
     // 修正所有导航链接
@@ -190,12 +214,17 @@ function calculateRelativePath(targetPath, currentDepth) {
         }
     }
 
+    // 调试日志
+    console.log(`[calculateRelativePath] 目标: ${targetPath}, 路径段: [${pathSegments.join(', ')}], dataIndex: ${dataIndex}`);
+
     if (dataIndex === -1) {
         // 根目录页面，直接使用目标路径
+        console.log(`[calculateRelativePath] 根目录页面，直接返回: ${targetPath}`);
         return targetPath;
     } else {
         // data目录或其子目录下的页面
         const isDataTarget = targetPath.startsWith('data/');
+        console.log(`[calculateRelativePath] 是否data目标: ${isDataTarget}`);
 
         let levelsBack, finalTarget;
         if (isDataTarget) {
@@ -204,18 +233,22 @@ function calculateRelativePath(targetPath, currentDepth) {
             const dataDirSegments = pathSegments.slice(0, dataIndex + 1); // 从根到data目录
             levelsBack = currentDirSegments.length - dataDirSegments.length;
             finalTarget = targetPath.substring(5); // 去掉 "data/"
+            console.log(`[calculateRelativePath] data目标: 回退${levelsBack}层, 最终目标: ${finalTarget}`);
         } else {
             // 目标不在data目录下（如index.html），需要回退到根目录
             const currentDirSegments = pathSegments.slice(0, -1); // 去掉文件名
             levelsBack = currentDirSegments.length; // 回退到根目录
             finalTarget = targetPath;
+            console.log(`[calculateRelativePath] 非data目标: 回退${levelsBack}层, 最终目标: ${finalTarget}`);
         }
 
         let relativePath = '';
         for (let i = 0; i < levelsBack; i++) {
             relativePath += '../';
         }
-        return relativePath + finalTarget;
+        const result = relativePath + finalTarget;
+        console.log(`[calculateRelativePath] 最终返回: ${result}`);
+        return result;
     }
 }
 
