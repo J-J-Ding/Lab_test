@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <base href="./" />
   <title>智能系统实验室 - Intelligent Systems Laboratory</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/slider.css" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/slider.css?v=2" />
 </head>
 <!-- 在 </body> 标签前添加 -->
 <script src="js/navbar-loader.js"></script>
@@ -20,7 +21,7 @@
           <div class="slider-item">
             <div class="slider-content">
               <div class="slider-image">
-                <img src="lab-logo.png" alt="深度学习研究" />
+                <img src="./lab-logo.png" alt="深度学习研究" />
                 <div class="slider-overlay"></div>
               </div>
               <div class="slider-text">
@@ -35,7 +36,7 @@
           <div class="slider-item">
             <div class="slider-content">
               <div class="slider-image">
-                <img src="lab-logo.png" alt="获奖展示" />
+                <img src="./lab-logo.png" alt="获奖展示" />
                 <div class="slider-overlay"></div>
               </div>
               <div class="slider-text">
@@ -50,7 +51,7 @@
           <div class="slider-item">
             <div class="slider-content">
               <div class="slider-image">
-                <img src="lab-logo.png" alt="国际会议" />
+                <img src="./lab-logo.png" alt="国际会议" />
                 <div class="slider-overlay"></div>
               </div>
               <div class="slider-text">
@@ -65,7 +66,7 @@
           <div class="slider-item">
             <div class="slider-content">
               <div class="slider-image">
-                <img src="lab-logo.png" alt="产学研合作" />
+                <img src="./lab-logo.png" alt="产学研合作" />
                 <div class="slider-overlay"></div>
               </div>
               <div class="slider-text">
@@ -80,7 +81,7 @@
           <div class="slider-item">
             <div class="slider-content">
               <div class="slider-image">
-                <img src="lab-logo.png" alt="优秀团队" />
+                <img src="./lab-logo.png" alt="优秀团队" />
                 <div class="slider-overlay"></div>
               </div>
               <div class="slider-text">
@@ -113,24 +114,28 @@
 
     <!-- 统计数据 -->
     <section class="stats-section">
-      <div class="stats-container">
-        <div class="stat-item">
-          <div class="stat-number">150+</div>
-          <div class="stat-label">发表论文</div>
+        <div class="stats-container">
+          <div class="stat-item" data-searchable="true">
+            <div class="stat-number" data-searchable="true">150+</div>
+            <div class="stat-label" data-searchable="true">发表论文</div>
+            <div class="stat-icon">📄</div>
+          </div>
+          <div class="stat-item" data-searchable="true">
+            <div class="stat-number" data-searchable="true">50+</div>
+            <div class="stat-label" data-searchable="true">科研项目</div>
+            <div class="stat-icon">🔬</div>
+          </div>
+          <div class="stat-item" data-searchable="true">
+            <div class="stat-number" data-searchable="true">30+</div>
+            <div class="stat-label" data-searchable="true">获奖荣誉</div>
+            <div class="stat-icon">🏆</div>
+          </div>
+          <div class="stat-item" data-searchable="true">
+            <div class="stat-number" data-searchable="true">20+</div>
+            <div class="stat-label" data-searchable="true">团队成员</div>
+            <div class="stat-icon">👥</div>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-number">50+</div>
-          <div class="stat-label">科研项目</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">30+</div>
-          <div class="stat-label">获奖荣誉</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">20+</div>
-          <div class="stat-label">团队成员</div>
-        </div>
-      </div>
     </section>
 
     <!-- 实验室简介 -->
@@ -139,22 +144,25 @@
         <div class="section-header">
           <h2>关于我们</h2>
           <p class="section-subtitle">About Us</p>
+          <div class="header-line"></div>
         </div>
         <div class="intro-content">
-          <div class="intro-text">
-            <p>智能系统实验室成立于2010年，是专注于智能系统领域的前沿研究机构。实验室汇聚了一支高素质的研究团队，在人工智能、机器学习、计算机视觉、自然语言处理等领域取得了丰硕的研究成果。</p>
-            <p>实验室秉持"创新引领、开放协作、追求卓越"的核心理念，致力于攻克智能系统领域的核心技术难题，培养具有国际视野和创新能力的优秀人才，推动智能系统技术的产业化应用。</p>
-            <p>近年来，实验室承担了国家自然科学基金重点项目、国家重点研发计划等国家级和省部级科研项目30余项，在IEEE TPAMI、CVPR、ICCV、NeurIPS等国际顶级期刊和会议上发表论文150余篇，授权发明专利50余项，获得国家科技进步奖、教育部自然科学奖等多项荣誉。</p>
+          <div class="intro-left">
+            <p>智能系统实验室成立于2010年，专注于智能系统领域的前沿研究。实验室在人工智能、机器学习、计算机视觉等领域取得丰硕成果，承担国家级项目30余项，发表论文150余篇，授权发明专利50余项。</p>
+            <div class="intro-tags">
+              <span class="intro-tag" data-searchable="true">人工智能</span>
+              <span class="intro-tag" data-searchable="true">机器学习</span>
+              <span class="intro-tag" data-searchable="true">计算机视觉</span>
+              <span class="intro-tag" data-searchable="true">深度学习</span>
+              <span class="intro-tag" data-searchable="true">自然语言处理</span>
+            </div>
           </div>
-          <div class="intro-images">
-            <div class="intro-image-grid">
-              <div class="intro-image-item">
-                <img src="data/images/lab-building.jpg" onerror="this.src='https://via.placeholder.com/500x400/667eea/ffffff?text=实验室大楼'" alt="实验室大楼" />
-                <div class="intro-image-caption">实验室大楼</div>
-              </div>
-              <div class="intro-image-item">
-                <img src="data/images/research-hall.jpg" onerror="this.src='https://via.placeholder.com/500x400/764ba2/ffffff?text=科研环境'" alt="科研环境" />
-                <div class="intro-image-caption">科研环境</div>
+          <div class="intro-right">
+            <div class="intro-image-wrapper">
+              <img src="./lab-logo.png" alt="实验室成员" onerror="this.src='https://via.placeholder.com/600x400/0f172a/0066cc?text=实验室团队'" />
+              <div class="intro-image-overlay"></div>
+              <div class="intro-image-badge">
+                <div class="badge-text">科研团队</div>
               </div>
             </div>
           </div>
@@ -168,226 +176,123 @@
         <div class="section-header">
           <h2>研究方向</h2>
           <p class="section-subtitle">Research Areas</p>
+          <div class="header-line"></div>
         </div>
         <div class="research-grid">
           <div class="research-card">
-            <div class="research-icon">🧠</div>
-            <h3>深度学习</h3>
-            <p>深度神经网络、深度强化学习、联邦学习</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">🧠</div>
+            </div>
+            <div class="research-content">
+              <h3>深度学习</h3>
+              <p>深度神经网络、深度强化学习、联邦学习</p>
+              <a href="data/projects/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
           <div class="research-card">
-            <div class="research-icon">👁️</div>
-            <h3>计算机视觉</h3>
-            <p>目标检测、图像分割、行为识别、三维视觉</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">👁️</div>
+            </div>
+            <div class="research-content">
+              <h3>计算机视觉</h3>
+              <p>目标检测、图像分割、行为识别、三维视觉</p>
+              <a href="data/papers/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
           <div class="research-card">
-            <div class="research-icon">💬</div>
-            <h3>自然语言处理</h3>
-            <p>机器翻译、文本生成、情感分析、知识图谱</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">💬</div>
+            </div>
+            <div class="research-content">
+              <h3>自然语言处理</h3>
+              <p>机器翻译、文本生成、情感分析、知识图谱</p>
+              <a href="data/projects/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
           <div class="research-card">
-            <div class="research-icon">🤖</div>
-            <h3>机器人技术</h3>
-            <p>智能机器人、路径规划、人机交互</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">🤖</div>
+            </div>
+            <div class="research-content">
+              <h3>机器人技术</h3>
+              <p>智能机器人、路径规划、人机交互</p>
+              <a href="data/projects/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
           <div class="research-card">
-            <div class="research-icon">📊</div>
-            <h3>数据挖掘</h3>
-            <p>大数据分析、推荐系统、异常检测</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">📊</div>
+            </div>
+            <div class="research-content">
+              <h3>数据挖掘</h3>
+              <p>大数据分析、推荐系统、异常检测</p>
+              <a href="data/projects/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
           <div class="research-card">
-            <div class="research-icon">🔒</div>
-            <h3>安全与隐私</h3>
-            <p>隐私保护、安全计算、对抗攻击</p>
+            <div class="research-icon-wrapper">
+              <div class="research-icon">🔒</div>
+            </div>
+            <div class="research-content">
+              <h3>安全与隐私</h3>
+              <p>隐私保护、安全计算、对抗攻击</p>
+              <a href="data/projects/index.html" class="research-link">了解更多 →</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- 最新成果 -->
-    <section class="section achievements-section">
-      <div class="section-container">
-        <div class="section-header">
-          <h2>最新成果</h2>
-          <p class="section-subtitle">Latest Achievements</p>
-        </div>
-        <div class="achievements-grid">
-          <!-- 成果卡片 1 -->
-          <div class="achievement-card">
-            <div class="achievement-image">
-              <img src="data/images/paper-1.jpg" onerror="this.src='https://via.placeholder.com/400x300/3498db/ffffff?text=CVPR+2024'" alt="论文" />
-              <div class="achievement-type-badge">论文</div>
-            </div>
-            <div class="achievement-content">
-              <h3>基于多模态融合的图像描述方法</h3>
-              <p class="achievement-author">作者：zhangsan, lisi</p>
-              <p class="achievement-meta">发表于 CVPR 2024</p>
-            </div>
-          </div>
-
-          <!-- 成果卡片 2 -->
-          <div class="achievement-card">
-            <div class="achievement-image">
-              <img src="data/images/project-1.jpg" onerror="this.src='https://via.placeholder.com/400x300/27ae60/ffffff?text=国家重点项目'" alt="项目" />
-              <div class="achievement-type-badge">项目</div>
-            </div>
-            <div class="achievement-content">
-              <h3>国家重点研发计划"智能感知系统"</h3>
-              <p class="achievement-author">负责人：wangwu</p>
-              <p class="achievement-meta">2023-2026</p>
-            </div>
-          </div>
-
-          <!-- 成果卡片 3 -->
-          <div class="achievement-card">
-            <div class="achievement-image">
-              <img src="data/images/award-2.jpg" onerror="this.src='https://via.placeholder.com/400x300/e67e22/ffffff?text=全国一等奖'" alt="竞赛" />
-              <div class="achievement-type-badge">竞赛</div>
-            </div>
-            <div class="achievement-content">
-              <h3>获全国大学生智能汽车竞赛一等奖</h3>
-              <p class="achievement-author">团队：智能先锋队</p>
-              <p class="achievement-meta">2024年</p>
-            </div>
-          </div>
-
-          <!-- 成果卡片 4 -->
-          <div class="achievement-card">
-            <div class="achievement-image">
-              <img src="data/images/book-1.jpg" onerror="this.src='https://via.placeholder.com/400x300/9b59b6/ffffff?text=深度学习教材'" alt="著作" />
-              <div class="achievement-type-badge">著作</div>
-            </div>
-            <div class="achievement-content">
-              <h3>《深度学习原理与应用》</h3>
-              <p class="achievement-author">作者：zhanglaoshi, lilaoshi</p>
-              <p class="achievement-meta">清华大学出版社 2023</p>
-            </div>
-          </div>
-        </div>
-        <div class="section-footer">
-          <a href="data/achievements/index.html" class="btn btn-primary">查看所有成果 →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 新闻动态 -->
-    <section class="section news-section">
-      <div class="section-container">
-        <div class="section-header">
-          <h2>新闻动态</h2>
-          <p class="section-subtitle">News & Events</p>
-        </div>
-        <div class="news-grid">
-          <div class="news-item">
-            <div class="news-image">
-              <img src="data/images/news-1.jpg" onerror="this.src='https://via.placeholder.com/400x300/0066cc/ffffff?text=十周年庆典'" alt="新闻" />
-            </div>
-            <div class="news-content">
-              <h3>智能系统实验室成立十周年庆典圆满举行</h3>
-              <p>实验室全体师生欢聚一堂，共同回顾过去十年的辉煌历程...</p>
-              <div class="news-meta">
-                <span class="news-date">2025-01-01</span>
-                <a href="data/news/example-news.html" class="news-link">阅读更多 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="news-item">
-            <div class="news-image">
-              <img src="data/images/news-2.jpg" onerror="this.src='https://via.placeholder.com/400x300/00c4cc/ffffff?text=国家科技进步奖'" alt="新闻" />
-            </div>
-            <div class="news-content">
-              <h3>实验室研究成果获国家科技进步二等奖</h3>
-              <p>在智能系统领域的突破性研究成果获得国家级表彰...</p>
-              <div class="news-meta">
-                <span class="news-date">2024-12-15</span>
-                <a href="#" class="news-link">阅读更多 →</a>
-              </div>
-            </div>
-          </div>
-          <div class="news-item">
-            <div class="news-image">
-              <img src="data/images/news-3.jpg" onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=前沿论坛'" alt="新闻" />
-            </div>
-            <div class="news-content">
-              <h3>实验室举办第十届智能系统前沿论坛</h3>
-              <p>邀请国内外知名专家学者，探讨智能系统发展前沿...</p>
-              <div class="news-meta">
-                <span class="news-date">2024-11-20</span>
-                <a href="#" class="news-link">阅读更多 →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="section-footer">
-          <a href="data/news/index.html" class="btn btn-primary">查看全部新闻 →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 合作伙伴 -->
-    <section class="section partners-section">
-      <div class="section-container">
-        <div class="section-header">
-          <h2>合作伙伴</h2>
-          <p class="section-subtitle">Partners</p>
-        </div>
-        <div class="partners-grid">
-          <div class="partner-item">
-            <img src="data/images/partner-1.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位1'" alt="合作单位" />
-          </div>
-          <div class="partner-item">
-            <img src="data/images/partner-2.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位2'" alt="合作单位" />
-          </div>
-          <div class="partner-item">
-            <img src="data/images/partner-3.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位3'" alt="合作单位" />
-          </div>
-          <div class="partner-item">
-            <img src="data/images/partner-4.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位4'" alt="合作单位" />
-          </div>
-          <div class="partner-item">
-            <img src="data/images/partner-5.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位5'" alt="合作单位" />
-          </div>
-          <div class="partner-item">
-            <img src="data/images/partner-6.png" onerror="this.src='https://via.placeholder.com/200x100/ffffff/cccccc?text=合作单位6'" alt="合作单位" />
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
 
   <!-- 页脚 -->
   <footer class="footer">
     <div class="footer-container">
-      <div class="footer-info">
-        <div class="footer-logo">
-          <img src="lab-logo.png" alt="智能系统实验室" />
-          <h3>智能系统实验室</h3>
-          <p>Intelligent Systems Laboratory</p>
+      <div class="footer-main">
+        <!-- 左侧 Logo -->
+        <div class="footer-left">
+          <div class="footer-logo">
+            <img src="./lab-logo.png" alt="智能系统实验室" />
+            <div class="footer-brand-info">
+              <h3>智能系统实验室</h3>
+              <p>Intelligent Systems Laboratory</p>
+            </div>
+          </div>
         </div>
-        <div class="footer-contact">
-          <p><span class="contact-icon">📍</span> 地址：XX省XX市XX路XX号</p>
-          <p><span class="contact-icon">📧</span> 邮箱：isl@example.com</p>
-          <p><span class="contact-icon">📞</span> 电话：+86-XXX-XXXX-XXXX</p>
+
+        <div class="footer-divider"></div>
+
+        <!-- 中间 联系我们 -->
+        <div class="footer-center">
+          <div class="footer-contact">
+            <h4>联系我们</h4>
+            <div class="contact-list">
+              <div class="contact-item">
+                <span class="contact-icon">📍</span>
+                <span>地址：XX省XX市XX区XX路XX号</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <span>邮箱：isl@example.com</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <span>电话：+86-010-1234-5678</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="footer-links">
-        <div class="footer-link-column">
-          <h4>快速链接</h4>
-          <ul>
-            <li><a href="data/achievements/index.html">成果汇总</a></li>
-            <li><a href="data/members/index.html">团队成员</a></li>
-            <li><a href="data/teachers/index.html">师资队伍</a></li>
-            <li><a href="data/students/index.html">学生培养</a></li>
-          </ul>
-        </div>
-        <div class="footer-link-column">
-          <h4>相关链接</h4>
-          <ul>
-            <li><a href="#">学校官网</a></li>
-            <li><a href="#">研究生院</a></li>
-            <li><a href="#">科研管理系统</a></li>
-            <li><a href="#">图书馆</a></li>
-          </ul>
+
+        <div class="footer-divider"></div>
+
+        <!-- 右侧 相关链接 -->
+        <div class="footer-right">
+          <div class="footer-links">
+            <h4>相关链接</h4>
+            <ul>
+              <li><a href="#">链接1</a></li>
+              <li><a href="#">链接2</a></li>
+              <li><a href="#">链接3</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

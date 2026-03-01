@@ -12,14 +12,42 @@
     .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
     }
     .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+    }
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
     .item-title {
       font-size: 22px;
@@ -51,17 +79,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
     }
     .item-author {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-    .item-author img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
     }
     .item-link {
       color: var(--primary-color);
@@ -78,8 +101,30 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
-      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      background: linear-gradient(135deg, #0066cc, #004499);
       color: #fff;
+    }
+    .btn-sm {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+    #contentList {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .item-card[data-date] {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .empty {
       text-align: center;
@@ -95,7 +140,7 @@
 <body>
   <!-- 统一导航栏 -->
   <div id="navbar-container"></div>
-  
+
   <main class="main-content category-content">
     <section class="section">
       <div class="section-container">
@@ -103,18 +148,37 @@
           <h2>出版刊物</h2>
           <p class="section-subtitle">Books & Publications</p>
         </div>
-        
+
         <div id="contentList">
-          <div class="empty">
-            <div class="empty-icon">📚</div>
-            <h3>暂无刊物内容</h3>
-            <p>敬请期待</p>
+          <!-- 刊物卡片 - 按出版时间排序 -->
+          <div class="item-card" data-date="2023">
+            <div class="item-thumbnail">
+              <img src="../../lab-logo.png" alt="深度学习原理与应用" />
+            </div>
+            <div class="item-content-wrapper">
+              <div class="item-title">深度学习原理与应用</div>
+              <div class="item-meta">
+                <span>📄 学术专著</span>
+                <span>📅 2023年6月</span>
+                <span>📚 456页</span>
+              </div>
+              <div class="item-content">
+                本书系统介绍了深度学习的理论基础、核心算法和实践应用，适合高校计算机专业本科生、研究生以及相关领域的研究人员阅读。
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <span>👤</span>
+                  <a href="../members/index.html" class="item-link">张老师, 李老师</a>
+                </div>
+                <a href="Deep_Learning_Book/index.html" class="btn btn-sm">查看详情</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
-  
+
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
 

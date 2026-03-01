@@ -12,14 +12,42 @@
     .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
     }
     .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+    }
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
     .item-title {
       font-size: 22px;
@@ -51,17 +79,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
     }
     .item-author {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-    .item-author img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
     }
     .item-link {
       color: var(--primary-color);
@@ -78,8 +101,30 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
-      background: var(--secondary-color);
+      background: linear-gradient(135deg, #0066cc, #004499);
       color: #fff;
+    }
+    .btn-sm {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+    #contentList {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .item-card[data-date] {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .empty {
       text-align: center;
@@ -95,7 +140,7 @@
 <body>
   <!-- 统一导航栏 -->
   <div id="navbar-container"></div>
-  
+
   <main class="main-content category-content">
     <section class="section">
       <div class="section-container">
@@ -105,10 +150,29 @@
         </div>
 
         <div id="contentList">
-          <div class="empty">
-            <div class="empty-icon">📝</div>
-            <h3>暂无博客内容</h3>
-            <p>敬请期待</p>
+          <!-- 博客卡片 - 按发布时间排序 -->
+          <div class="item-card" data-date="2025-01-15">
+            <div class="item-thumbnail">
+              <img src="../../lab-logo.png" alt="深度学习入门与实践" />
+            </div>
+            <div class="item-content-wrapper">
+              <div class="item-title">深度学习入门与实践</div>
+              <div class="item-meta">
+                <span>👤 作者：王燕舞</span>
+                <span>📅 2025-01-15</span>
+                <span>⏱️ 阅读时间：15分钟</span>
+              </div>
+              <div class="item-content">
+                深度学习作为人工智能领域的核心技术，近年来在图像识别、自然语言处理、语音识别等多个领域取得了突破性进展。本文将从深度学习的基本概念入手，介绍神经网络的核心原理，并结合实际案例...
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <span>🏷️</span>
+                  <span>技术分享</span>
+                </div>
+                <a href="Deep_Learning_Introduction/index.html" class="btn btn-sm">阅读全文</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +181,6 @@
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
-  
+
 </body>
 </html>

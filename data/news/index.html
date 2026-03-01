@@ -12,14 +12,42 @@
     .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
     }
     .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+    }
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
     .item-title {
       font-size: 22px;
@@ -51,17 +79,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
     }
     .item-author {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-    .item-author img {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
     }
     .item-link {
       color: var(--primary-color);
@@ -78,8 +101,30 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
-      background: linear-gradient(135deg, #00cec9, #0984e3);
+      background: linear-gradient(135deg, #0066cc, #004499);
       color: #fff;
+    }
+    .btn-sm {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+    #contentList {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .item-card[data-date] {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .empty {
       text-align: center;
@@ -95,7 +140,7 @@
 <body>
   <!-- 统一导航栏 -->
   <div id="navbar-container"></div>
-  
+
   <main class="main-content category-content">
     <section class="section">
       <div class="section-container">
@@ -103,17 +148,40 @@
           <h2>新闻动态</h2>
           <p class="section-subtitle">News & Events</p>
         </div>
-        
+
         <div id="contentList">
-          <div class="empty">
-            <div class="empty-icon">📰</div>
-            <h3>暂无新闻内容</h3>
-            <p>敬请期待</p>
+          <!-- 新闻卡片 - 按发布时间排序 -->
+
+          <!-- ----------------------- -->
+          <div class="item-card" data-date="2024-12-15">
+            <div class="item-thumbnail">
+              <img src="../../lab-logo.png" alt="国家科技进步奖" />
+            </div>
+            <div class="item-content-wrapper">
+              <div class="item-title">智能系统实验室研究成果获国家科技进步二等奖</div>
+              <div class="item-meta">
+                <span>📅 2024-12-15</span>
+                <span>🏆 国家级奖项</span>
+                <span>📍 北京</span>
+              </div>
+              <div class="item-content">
+                实验室王燕舞教授团队完成的"电网分布式协同控制关键技术及应用"项目荣获国家科技进步二等奖，标志着该领域研究已达到国内领先、国际先进水平。
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <span>🏷️</span>
+                  <span>获奖新闻</span>
+                </div>
+                <a href="Lab_Anniversary_2025/index.html" class="btn btn-sm">查看详情</a>
+              </div>
+            </div>
           </div>
+          <!-- ----------------------- -->
         </div>
       </div>
     </section>
   </main>
+
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
 

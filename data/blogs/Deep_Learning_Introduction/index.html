@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>深度学习入门与实践 - 智能系统实验室</title>
+  <link rel="stylesheet" href="../../../css/style.css" />
+  <link rel="stylesheet" href="../css/blog_detail.css" />
+</head>
+<body>
+  <!-- 统一导航栏 -->
+  <div id="navbar-container"></div>
+
+  <main class="main-content">
+    <section class="section">
+      <div class="section-container">
+        <div class="back-button">
+          <a href="../index.html" class="btn btn-outline">← 返回博客列表</a>
+        </div>
+
+        <div class="blog-detail-container">
+          <!-- 博客头部 -->
+          <div class="blog-header">
+            <div class="blog-badge">技术分享</div>
+            <h1 class="blog-title" data-search="title">深度学习入门与实践</h1>
+            <div class="blog-meta">
+              <span class="blog-meta-item">👤 作者：王燕舞</span>
+              <span class="blog-meta-item">📅 发布时间：2025-01-15</span>
+              <span class="blog-meta-item">⏱️ 阅读时间：15分钟</span>
+            </div>
+          </div>
+
+          <!-- 博客摘要 -->
+          <div class="blog-section" data-search="abstract">
+            <h2 class="blog-section-title">📝 摘要</h2>
+            <div class="blog-content">
+              <p>深度学习作为人工智能领域的核心技术，近年来在图像识别、自然语言处理、语音识别等多个领域取得了突破性进展。本文将从深度学习的基本概念入手，介绍神经网络的核心原理，并结合实际案例，讲解如何使用 PyTorch 框架构建和训练深度学习模型。无论你是初学者还是有经验的开发者，都能从中获得实用的知识与技能。</p>
+            </div>
+          </div>
+
+          <!-- 博客正文 -->
+          <div class="blog-section" data-search="content">
+            <h2 class="blog-section-title">📖 正文</h2>
+            <div class="blog-content">
+              <h3>一、深度学习简介</h3>
+              <p>深度学习是机器学习的一个子集，其核心思想是通过构建多层神经网络，自动学习数据的层次化特征表示。与传统机器学习方法相比，深度学习能够处理更复杂的数据，如高维图像、长序列文本等，并且在许多任务中取得了更好的性能。</p>
+
+              <h3>二、神经网络基础</h3>
+              <p>神经网络是深度学习的基础模型，由输入层、多个隐藏层和输出层组成。每一层都包含若干神经元，神经元之间通过权重连接，并使用激活函数引入非线性。前向传播过程将输入数据逐层传递，得到预测输出；反向传播算法则根据预测误差，逐层更新网络参数。</p>
+
+              <p>以下是使用 PyTorch 构建简单神经网络的代码示例：</p>
+              <pre><code>import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# 定义神经网络模型
+class SimpleNN(nn.Module):
+    def __init__(self):
+        super(SimpleNN, self).__init__()
+        self.fc1 = nn.Linear(784, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, 10)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.relu(self.fc1(x))
+        x = self.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+# 初始化模型
+model = SimpleNN()
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)</code></pre>
+
+              <h3>三、卷积神经网络（CNN）</h3>
+              <p>卷积神经网络是专门用于处理图像数据的深度学习模型。CNN 通过卷积层提取图像的局部特征，通过池化层降低特征维度，能够有效捕获图像的空间结构信息。CNN 在图像分类、目标检测、语义分割等任务中表现出色。</p>
+
+              <h3>四、实践建议</h3>
+              <p>对于深度学习初学者，建议从以下步骤入手：</p>
+              <p><strong>1. 基础知识准备：</strong>掌握 Python 编程，熟悉 NumPy、Pandas 等数据处理库，了解线性代数和概率论的基本概念。</p>
+              <p><strong>2. 选择框架：</strong>PyTorch 和 TensorFlow 是目前最流行的深度学习框架，PyTorch 更适合研究和实验，TensorFlow 更适合生产环境。</p>
+              <p><strong>3. 从简单任务开始：</strong>先在 MNIST、CIFAR-10 等标准数据集上练习，掌握模型构建和训练的基本流程。</p>
+              <p><strong>4. 学习优秀项目：</strong>阅读开源项目的代码，学习工程实践技巧，参与 Kaggle 等竞赛提升实战能力。</p>
+
+              <h3>五、总结</h3>
+              <p>深度学习是一个快速发展的领域，新技术层出不穷。作为学习者，不仅要掌握理论知识，更要注重实践，通过动手实验加深理解。希望本文能为深度学习入门者提供帮助，激发更多人对 AI 技术的热情与探索。</p>
+            </div>
+          </div>
+
+          <!-- 标签 -->
+          <div class="blog-section" data-search="tags">
+            <h2 class="blog-section-title">🏷️ 标签</h2>
+            <div class="tags-container">
+              <div class="tag-item">🧠 深度学习</div>
+              <div class="tag-item">🔥 PyTorch</div>
+              <div class="tag-item">🎯 机器学习</div>
+              <div class="tag-item">💻 人工智能</div>
+              <div class="tag-item">📚 教程</div>
+            </div>
+          </div>
+
+          <!-- 作者信息 -->
+          <div class="blog-section" data-search="author">
+            <h2 class="blog-section-title">👤 作者简介</h2>
+            <div class="author-info">
+              <div class="author-avatar">👨‍💻</div>
+              <div class="author-details">
+                <div class="author-name">王燕舞</div>
+                <div class="author-role">智能系统实验室 · 主任研究员</div>
+                <div class="author-bio">专注于深度学习、分布式协同控制领域研究，发表多篇高水平论文，主持国家级重点项目多项。</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 相关文章 -->
+          <div class="blog-section" data-search="related">
+            <h2 class="blog-section-title">📚 相关文章</h2>
+            <div class="related-posts">
+              <a href="#" class="related-post-item">
+                <span class="related-post-icon">📝</span>
+                <span class="related-post-title">卷积神经网络详解</span>
+                <span class="related-post-date">2025-01-10</span>
+              </a>
+              <a href="#" class="related-post-item">
+                <span class="related-post-icon">📝</span>
+                <span class="related-post-title">Transformer模型原理分析</span>
+                <span class="related-post-date">2025-01-05</span>
+              </a>
+              <a href="#" class="related-post-item">
+                <span class="related-post-icon">📝</span>
+                <span class="related-post-title">分布式优化算法综述</span>
+                <span class="related-post-date">2024-12-28</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../../js/search.js"></script>
+  <script src="../../../js/navbar-loader.js"></script>
+</body>
+</html>

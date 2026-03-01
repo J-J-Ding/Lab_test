@@ -44,9 +44,14 @@
       font-size: 14px;
       font-weight: 500;
     }
+    .graduate-content {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
     .graduate-info {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 15px;
     }
@@ -64,6 +69,29 @@
       font-weight: 500;
       color: var(--text-primary);
     }
+    .graduate-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+    .graduate-company {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #0066cc, #004499);
+      color: #fff;
+    }
     .empty {
       text-align: center;
       padding: 80px 20px;
@@ -72,6 +100,19 @@
     .empty-icon {
       font-size: 64px;
       margin-bottom: 20px;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .graduate-card[data-year] {
+      animation: fadeIn 0.5s ease;
     }
   </style>
 </head>
@@ -88,10 +129,40 @@
         </div>
         
         <div id="graduateList">
-          <div class="empty">
-            <div class="empty-icon">🎓</div>
-            <h3>暂无成员去向信息</h3>
-            <p>敬请期待</p>
+          <!-- 丁俊杰 - 2025届 -->
+          <div class="graduate-card" data-year="2025">
+            <div class="graduate-header">
+              <div class="graduate-name">丁俊杰</div>
+              <div class="graduate-year">2025届</div>
+            </div>
+            <div class="graduate-content">
+              <p>丁俊杰同学于2022年加入智能系统实验室，师从王燕舞教授攻读硕士学位。在读期间，主要从事深度学习与时间序列预测相关研究，参与多项国家级项目，发表高水平论文2篇，授权发明专利1项。</p>
+            </div>
+            <div class="graduate-info">
+              <div class="info-item">
+                <span class="info-icon">🎓</span>
+                <span class="info-label">学位：硕士</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">🔬</span>
+                <span class="info-label">研究方向：深度学习</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">📄</span>
+                <span class="info-label">论文：2篇</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">🔬</span>
+                <span class="info-label">专利：1项</span>
+              </div>
+            </div>
+            <div class="graduate-footer">
+              <div class="graduate-company">
+                <span class="info-icon">🏢</span>
+                <span>就业单位：腾讯科技有限公司</span>
+              </div>
+              <div class="tag">算法工程师</div>
+            </div>
           </div>
         </div>
       </div>
