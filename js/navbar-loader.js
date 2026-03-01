@@ -1,4 +1,4 @@
-// 智能导航栏加载器 - 兼容本地和HTTP环境
+// 统一导航栏加载器 - 支持本地和 GitHub Pages
 function loadNavbar() {
     const navbarContainer = document.getElementById('navbar-container');
     if (!navbarContainer) {
@@ -6,19 +6,17 @@ function loadNavbar() {
         return;
     }
 
-    // 计算当前页面相对于根目录的层级
+    // 获取当前页面信息
+    const currentUrl = window.location.href;
     const currentPath = window.location.pathname;
     const pathSegments = currentPath.split('/').filter(Boolean);
-    const pathDepth = pathSegments.length;
 
     // 计算导航栏文件的相对路径
-    let navbarPath = calculateNavbarPath(pathDepth, pathSegments);
+    const navbarPath = calculateNavbarPath(pathSegments);
+    console.log('当前路径:', currentPath, '导航栏路径:', navbarPath);
 
-    console.log('当前路径:', currentPath, '层级:', pathDepth, '路径段:', pathSegments.join('/'), '导航栏路径:', navbarPath);
-
-    // 使用绝对URL路径避免CORS问题
-    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-    const navbarUrl = baseUrl + navbarPath;
+    // 构建完整的导航栏 URL
+    const navbarUrl = new URL(navbarPath, currentUrl).href;
 
     fetch(navbarUrl, { cache: 'no-store' })
         .then(response => {
@@ -30,23 +28,15 @@ function loadNavbar() {
         .then(html => {
             navbarContainer.innerHTML = html;
 
-            // 使用 requestAnimationFrame 确保 DOM 已完全渲染
+            // 等待 DOM 渲染完成后修正链接
             requestAnimationFrame(() => {
-                // 修正导航栏中的所有链接路径
-                console.log('[loadNavbar] 开始修正导航栏链接');
-                fixAllNavbarLinks(pathDepth);
-
-                // 设置当前页面的激活状态
+                fixAllNavbarLinks(pathSegments);
                 setActiveNavItem();
-
-                // 初始化搜索功能
                 initializeSearch();
             });
         })
         .catch(error => {
             console.error('加载导航栏失败:', error);
-            console.error('尝试的URL:', navbarUrl);
-            // 显示更详细的错误信息
             navbarContainer.innerHTML = `
                 <div style="padding: 20px; text-align: center; color: #666; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; margin: 10px;">
                     <strong>导航栏加载失败</strong><br>
@@ -57,309 +47,173 @@ function loadNavbar() {
 }
 
 // 计算导航栏文件的相对路径
-function calculateNavbarPath(pathDepth, pathSegments) {
-    // 查找data目录的位置
-    let dataIndex = -1;
-    for (let i = 0; i < pathSegments.length; i++) {
-        if (pathSegments[i] === 'data') {
-            dataIndex = i;
-            break;
-        }
-    }
+// 统一导航栏文件位置: data/navbar-unified.html
+function calculateNavbarPath(pathSegments) {
+    // 查找 data 目录的位置
+    const dataIndex = pathSegments.indexOf('data');
 
-    // 根据不同的环境计算路径，统一导航栏文件位于 data/navbar-unified.html
     if (dataIndex === -1) {
-        // 根目录页面 (index.html)，直接使用 data/navbar-unified.html
+        // 根目录页面，如: /index.html 或 /Lab_test/index.html
         return 'data/navbar-unified.html';
-    } else {
-        // data目录或其子目录下的页面
-        // 计算从当前页面到 data 目录的回退层数
-        // pathSegments 包含文件名，例如 ['data', 'projects', 'index.html']
-        // 当前目录: 去掉文件名 = ['data', 'projects']
-        // data目录: ['data']
-        // 回退层数 = 当前目录长度 - data目录长度 = 2 - 1 = 1
-        const currentDirSegments = pathSegments.slice(0, -1); // 去掉文件名
-        const dataDirSegments = pathSegments.slice(0, dataIndex + 1); // 从根到data目录
-        const levelsBack = currentDirSegments.length - dataDirSegments.length;
-
-        let relativePath = '';
-        for (let i = 0; i < levelsBack; i++) {
-            relativePath += '../';
-        }
-        return relativePath + 'navbar-unified.html';
     }
+
+    // data 目录或其子目录下的页面
+    // 当前目录路径段（去掉文件名）
+    const currentDirSegments = pathSegments.slice(0, -1);
+    // data 目录路径段
+    const dataDirSegments = pathSegments.slice(0, dataIndex + 1);
+
+    // 计算从当前目录回退到 data 目录需要多少层
+    const levelsBack = currentDirSegments.length - dataDirSegments.length;
+
+    // 构建相对路径
+    const relativePath = '../'.repeat(levelsBack) + 'navbar-unified.html';
+    return relativePath;
 }
 
 // 修正导航栏中的所有链接路径
-// function fixAllNavbarLinks(pathDepth) {
-//     // 修正logo链接
-//     const logoLink = document.querySelector('.nav-logo');
-//     if (logoLink) {
-//         logoLink.href = calculateRelativePath('index.html', pathDepth);
-//     }
-    
-//     // 修正logo图片
-//     const logoImg = document.querySelector('.nav-logo img');
-//     if (logoImg) {
-//         logoImg.src = calculateRelativePath('lab-logo.png', pathDepth);
-//     }
-    
-//     // 修正所有导航链接
-//     const navLinks = document.querySelectorAll('.nav-menu a:not(.nav-logo)');
-//     navLinks.forEach(link => {
-//         const originalHref = link.getAttribute('href');
-//         if (originalHref && !originalHref.startsWith('http')) {
-//             link.href = calculateRelativePath('data/' + originalHref, pathDepth);
-//         }
-//     });
-// }
+function fixAllNavbarLinks(pathSegments) {
+    console.log('[fixAllNavbarLinks] 开始修正导航栏链接');
 
-function fixAllNavbarLinks(pathDepth) {
-    // 获取当前页面信息
-    const currentPath = window.location.pathname;
-    const pathSegments = currentPath.split('/').filter(Boolean);
+    // 查找 data 目录的位置
+    const dataIndex = pathSegments.indexOf('data');
 
-    // 查找data目录的位置
-    let dataIndex = -1;
-    for (let i = 0; i < pathSegments.length; i++) {
-        if (pathSegments[i] === 'data') {
-            dataIndex = i;
-            break;
-        }
-    }
-
-    // 更严格的"不要改写"的判断：外链/协议链接/锚点都跳过
-    function shouldRewrite(href) {
-        if (!href) return false;
-        if (href.startsWith('#')) return false;                 // #anchor
-        if (/^(https?:)?\/\//i.test(href)) return false;        // http:// https:// //cdn...
-        if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return false;    // mailto: tel: javascript: data: ...
-        return true;
-    }
-
-    // 统一把 href 变成"站内相对路径"再交给 calculateRelativePath
-    function toInternalTarget(href) {
-        // 去掉开头的 /，避免 GitHub Pages 项目页下被解析到域名根
-        let p = href.replace(/^\/+/, "");
-
-        // 避免重复拼 data/
-        if (!p.startsWith("data/")) p = "data/" + p;
-
-        // 清理可能出现的 data/data/（防御性）
-        p = p.replace(/^data\/data\//, "data/");
-
-        return p;
-    }
-
-    // 修正logo链接
+    // 修正 logo 链接
     const logoLink = document.querySelector('.nav-logo');
-    console.log('[fixAllNavbarLinks] 查找 logoLink:', !!logoLink);
     if (logoLink) {
-        try {
-            const logoHref = calculateRelativePath('index.html', pathDepth);
-            console.log('==== Logo 修正 ====');
-            console.log('修正logo链接 href:', logoHref);
-            const fullHref = new URL(logoHref, window.location.href).href;
-            console.log('解析后的完整URL:', fullHref);
-            logoLink.setAttribute('href', logoHref);
-        } catch (e) {
-            console.error('修正logo链接失败:', e);
-        }
+        const logoHref = calculateRelativePath('index.html', pathSegments, dataIndex);
+        console.log('Logo 链接修正为:', logoHref);
+        logoLink.setAttribute('href', logoHref);
     }
 
-    // 修正logo图片
+    // 修正 logo 图片
     const logoImg = document.querySelector('.nav-logo img');
-    console.log('[fixAllNavbarLinks] 查找 logoImg:', !!logoImg);
     if (logoImg) {
-        try {
-            const logoSrc = calculateRelativePath('lab-logo.png', pathDepth);
-            console.log('修正logo图片 src:', logoSrc);
-            console.log('当前页面URL:', window.location.href);
-            const actualImgUrl = new URL(logoSrc, window.location.href).href;
-            console.log('实际图片URL:', actualImgUrl);
-            logoImg.setAttribute('src', logoSrc);
-        } catch (e) {
-            console.error('修正logo图片失败:', e);
-        }
+        const logoSrc = calculateRelativePath('lab-logo.png', pathSegments, dataIndex);
+        console.log('Logo 图片修正为:', logoSrc);
+        logoImg.setAttribute('src', logoSrc);
     }
 
-    // 修正所有导航链接
+    // 修正所有导航链接（排除 logo）
     const navLinks = document.querySelectorAll('.nav-menu a:not(.nav-logo)');
     navLinks.forEach(link => {
         const originalHref = link.getAttribute('href');
 
-        // ✅ 不要只判断 startsWith('http')，要判断"所有协议/外链/锚点"
-        if (!shouldRewrite(originalHref)) return;
+        // 跳过外链和锚点
+        if (!originalHref || originalHref.startsWith('#') || /^(https?:)?\/\//i.test(originalHref)) {
+            return;
+        }
 
-        // 只改写站内页面：统一转成 data/xxx 再算相对路径
-        const target = toInternalTarget(originalHref);
-
-        // ✅ 用 setAttribute 保留相对路径形式（更好排查）
-        link.setAttribute('href', calculateRelativePath(target, pathDepth));
+        // 计算新的相对路径
+        const newHref = calculateRelativePath(originalHref, pathSegments, dataIndex);
+        link.setAttribute('href', newHref);
     });
+
+    console.log('[fixAllNavbarLinks] 完成');
 }
 
-
-// 计算相对路径 - 优化为基于data目录的准确计算
-function calculateRelativePath(targetPath, currentDepth) {
-    const currentPath = window.location.pathname;
-    const pathSegments = currentPath.split('/').filter(Boolean);
-
-    // 查找data目录的位置
-    let dataIndex = -1;
-    for (let i = 0; i < pathSegments.length; i++) {
-        if (pathSegments[i] === 'data') {
-            dataIndex = i;
-            break;
-        }
-    }
-
-    // 调试日志
-    console.log(`[calculateRelativePath] 目标: ${targetPath}, 路径段: [${pathSegments.join(', ')}], dataIndex: ${dataIndex}`);
-
+// 计算目标路径相对于当前页面的相对路径
+function calculateRelativePath(targetPath, pathSegments, dataIndex) {
+    // 如果没有 data 目录（根目录页面）
     if (dataIndex === -1) {
-        // 根目录页面，直接使用目标路径
-        console.log(`[calculateRelativePath] 根目录页面，直接返回: ${targetPath}`);
+        // 目标已经在根目录下，直接返回
         return targetPath;
-    } else {
-        // data目录或其子目录下的页面
-        const isDataTarget = targetPath.startsWith('data/');
-        console.log(`[calculateRelativePath] 是否data目标: ${isDataTarget}`);
-
-        let levelsBack, finalTarget;
-        if (isDataTarget) {
-            // 目标在data目录下，只需回退到data目录
-            const currentDirSegments = pathSegments.slice(0, -1); // 去掉文件名
-            const dataDirSegments = pathSegments.slice(0, dataIndex + 1); // 从根到data目录
-            levelsBack = currentDirSegments.length - dataDirSegments.length;
-            finalTarget = targetPath.substring(5); // 去掉 "data/"
-            console.log(`[calculateRelativePath] data目标: 回退${levelsBack}层, 最终目标: ${finalTarget}`);
-        } else {
-            // 目标不在data目录下（如index.html），需要回退到根目录
-            const currentDirSegments = pathSegments.slice(0, -1); // 去掉文件名
-            levelsBack = currentDirSegments.length; // 回退到根目录
-            finalTarget = targetPath;
-            console.log(`[calculateRelativePath] 非data目标: 回退${levelsBack}层, 最终目标: ${finalTarget}`);
-        }
-
-        let relativePath = '';
-        for (let i = 0; i < levelsBack; i++) {
-            relativePath += '../';
-        }
-        const result = relativePath + finalTarget;
-        console.log(`[calculateRelativePath] 最终返回: ${result}`);
-        return result;
     }
+
+    // 判断目标是否在 data 目录下
+    const isDataTarget = targetPath.startsWith('data/');
+
+    // 当前目录路径段（去掉文件名）
+    const currentDirSegments = pathSegments.slice(0, -1);
+
+    let levelsBack, finalTarget;
+
+    if (isDataTarget) {
+        // 目标在 data 目录下，回退到 data 目录即可
+        const dataDirSegments = pathSegments.slice(0, dataIndex + 1);
+        levelsBack = currentDirSegments.length - dataDirSegments.length;
+        // 去掉 data/ 前缀
+        finalTarget = targetPath.substring(5);
+    } else {
+        // 目标不在 data 目录下（如 index.html, lab-logo.png），回退到根目录
+        // 需要减去 dataIndex（从 Lab_test/ 开始算起）
+        levelsBack = currentDirSegments.length - dataIndex;
+        finalTarget = targetPath;
+    }
+
+    // 构建相对路径
+    const relativePath = '../'.repeat(levelsBack) + finalTarget;
+    return relativePath;
 }
 
 // 设置当前页面的导航项为激活状态
-// function setActiveNavItem() {
-//     const currentPath = window.location.pathname;
-//     const navLinks = document.querySelectorAll('.nav-menu a');
-    
-//     // 提取当前页面的关键标识
-//     const pathParts = currentPath.split('/').filter(Boolean);
-//     const currentPageIdentifier = pathParts.length > 1 ? pathParts[pathParts.length - 2] : '';
-    
-//     navLinks.forEach(link => {
-//         link.classList.remove('active');
-//         const href = link.getAttribute('href');
-        
-//         if (href && !href.startsWith('http')) {
-//             // 检查链接是否指向当前页面或相关页面
-//             if (href.includes(currentPageIdentifier) && currentPageIdentifier !== '') {link.classList.add('active');}
-//             // if (href.includes(currentPageIdentifier) || 
-//             //     (currentPageIdentifier === '' && href.includes('index.html'))) {
-//             //     link.classList.add('active');
-//             // }
-//         }
-//     });
-// }
-
 function setActiveNavItem() {
-  const navLinks = document.querySelectorAll('.nav-menu a');
-  if (!navLinks.length) {
-    console.warn('setActiveNavItem: 没有找到导航栏链接');
-    return;
-  }
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    if (!navLinks.length) return;
 
-  console.log('setActiveNavItem: 开始设置激活状态，找到', navLinks.length, '个链接');
-
-  // 规范化 pathname：统一 index.html、尾斜杠、解码
-  function normalizePath(p) {
-    p = decodeURIComponent(p || '/');
-    p = p.replace(/\/index\.html?$/i, '/'); // /index.html => /
-    p = p.replace(/\/+$/, '/');             // 去掉多余尾斜杠
-    return p;
-  }
-
-  const currentPath = normalizePath(window.location.pathname);
-  console.log('当前路径:', currentPath, '(原始:', window.location.pathname + ')');
-
-  // 获取当前页面的完整URL（用于解析相对路径）
-  const currentUrl = window.location.href;
-
-  let bestLink = null;
-  let bestScore = -1;
-
-  navLinks.forEach((link, index) => {
-    link.classList.remove('active');
-
-    const href = link.getAttribute('href');
-    if (!href) return;
-
-    // 跳过外链/协议链接/#锚点（不要误改）
-    if (href.startsWith('#')) return;
-    if (/^(https?:)?\/\//i.test(href)) return;
-    if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return; // mailto: tel: javascript: ...
-
-    // 用当前页面的完整URL作为基础来解析相对路径
-    let linkPath;
-    try {
-      linkPath = normalizePath(new URL(href, currentUrl).pathname);
-    } catch (e) {
-      console.error('解析链接失败:', href, e);
-      return;
+    // 规范化路径
+    function normalizePath(p) {
+        p = decodeURIComponent(p || '/');
+        p = p.replace(/\/index\.html?$/i, '/');
+        p = p.replace(/\/+$/, '/');
+        return p;
     }
 
-    // 评分：优先"完全相等"，其次"前缀命中（栏目/目录）"，且选最长命中
-    let score = -1;
+    const currentPath = normalizePath(window.location.pathname);
+    let bestLink = null;
+    let bestScore = -1;
 
-    if (currentPath === linkPath) {
-      score = 1_000_000 + linkPath.length; // 完全命中最大
-    } else {
-      // 前缀命中要做"边界判断"，避免 /data 匹配到 /database
-      const isPrefix =
-        linkPath !== '/' &&
-        currentPath.startsWith(linkPath) &&
-        (linkPath.endsWith('/') || currentPath.charAt(linkPath.length) === '/');
+    navLinks.forEach(link => {
+        link.classList.remove('active');
 
-      if (isPrefix) score = linkPath.length;
-      // 首页兜底：/ 或 /index.html
-      if (linkPath === '/' && currentPath === '/') score = Math.max(score, 1);
-    }
+        const href = link.getAttribute('href');
+        if (!href) return;
 
-    console.log(`  链接 #${index}: "${link.textContent.trim()}"`, {
-      href,
-      linkPath,
-      score,
-      isActive: score > 0
+        // 跳过外链和锚点
+        if (href.startsWith('#') || /^(https?:)?\/\//i.test(href)) return;
+
+        // 使用当前页面 URL 作为基础来解析相对路径
+        let linkPath;
+        try {
+            linkPath = normalizePath(new URL(href, window.location.href).pathname);
+        } catch (e) {
+            return;
+        }
+
+        // 计算匹配分数
+        let score = -1;
+
+        if (currentPath === linkPath) {
+            // 完全匹配
+            score = 1000000 + linkPath.length;
+        } else {
+            // 前缀匹配（用于子页面）
+            const isPrefix =
+                linkPath !== '/' &&
+                currentPath.startsWith(linkPath) &&
+                (linkPath.endsWith('/') || currentPath.charAt(linkPath.length) === '/');
+
+            if (isPrefix) {
+                score = linkPath.length;
+            }
+
+            // 首页兜底
+            if (linkPath === '/' && currentPath === '/') {
+                score = Math.max(score, 1);
+            }
+        }
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestLink = link;
+        }
     });
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestLink = link;
+    if (bestLink) {
+        bestLink.classList.add('active');
+        console.log('✅ 激活导航项:', bestLink.textContent.trim());
     }
-  });
-
-  if (bestLink) {
-    bestLink.classList.add('active');
-    console.log('✅ 激活链接:', bestLink.textContent.trim(), '评分:', bestScore);
-  } else {
-    console.warn('⚠️ 没有找到匹配的链接');
-  }
 }
-
 
 // 初始化搜索功能
 function initializeSearch() {
