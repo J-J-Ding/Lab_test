@@ -9,50 +9,88 @@
     .category-content {
       padding-top: 70px;
     }
-    .graduate-card {
+    .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
-      border: 1px solid var(--border-color);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
     }
-    .graduate-card:hover {
+    .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
-      border-color: var(--primary-color);
     }
-    .graduate-header {
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-thumbnail-placeholder {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 48px;
+      font-weight: bold;
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+    .item-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+    .item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      color: var(--text-light);
+      font-size: 14px;
       margin-bottom: 15px;
       padding-bottom: 15px;
       border-bottom: 1px solid var(--border-color);
     }
-    .graduate-name {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-primary);
+    .item-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    .graduate-year {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .graduate-content {
+    .item-content {
       color: var(--text-secondary);
       line-height: 1.8;
       margin-bottom: 15px;
     }
-    .graduate-info {
+    .item-info {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      gap: 10px;
       margin-bottom: 15px;
     }
     .info-item {
@@ -69,12 +107,11 @@
       font-weight: 500;
       color: var(--text-primary);
     }
-    .graduate-footer {
+    .item-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 15px;
-      border-top: 1px solid var(--border-color);
+      margin-top: auto;
     }
     .graduate-company {
       display: flex;
@@ -92,14 +129,8 @@
       background: linear-gradient(135deg, #0066cc, #004499);
       color: #fff;
     }
-    .empty {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text-light);
-    }
-    .empty-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
+    .item-card[data-year] {
+      animation: fadeIn 0.5s ease;
     }
     @keyframes fadeIn {
       from {
@@ -111,8 +142,14 @@
         transform: translateY(0);
       }
     }
-    .graduate-card[data-year] {
-      animation: fadeIn 0.5s ease;
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-light);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -128,40 +165,43 @@
           <p class="section-subtitle">Graduate Career</p>
         </div>
         
-        <div id="graduateList">
-          <!-- 丁俊杰 - 2025届 -->
-          <div class="graduate-card" data-year="2025">
-            <div class="graduate-header">
-              <div class="graduate-name">丁俊杰</div>
-              <div class="graduate-year">2025届</div>
+        <div id="contentList">
+          <!-- 陈悦江 - 2025届 -->
+          <div class="item-card" data-year="2025">
+            <div class="item-thumbnail">
+              <img src="figs/陈悦江.jpg" alt="陈悦江" />  <!-- 需要修改 -->
             </div>
-            <div class="graduate-content">
-              <p>丁俊杰同学于2022年加入智能系统实验室，师从王燕舞教授攻读硕士学位。在读期间，主要从事深度学习与时间序列预测相关研究，参与多项国家级项目，发表高水平论文2篇，授权发明专利1项。</p>
-            </div>
-            <div class="graduate-info">
-              <div class="info-item">
-                <span class="info-icon">🎓</span>
-                <span class="info-label">学位：硕士</span>
+            <div class="item-content-wrapper">
+              <div class="item-title">陈悦江</div>  <!-- 需要修改 -->
+              <div class="item-meta">
+                <span>📅 2025届</span>  <!-- 需要修改 -->
+                <span>🎓 硕士学位</span>  <!-- 需要修改 -->
+                <span>🔬 深度学习</span>  <!-- 需要修改 -->
               </div>
-              <div class="info-item">
-                <span class="info-icon">🔬</span>
-                <span class="info-label">研究方向：深度学习</span>
+              <div class="item-content">  <!-- 需要修改 -->
+                <p>陈悦江同学于2022年加入智能系统实验室。在读期间，主要从事深度学习与时间序列预测相关研究，参与多项国家级项目，发表高水平论文3篇。</p>
               </div>
-              <div class="info-item">
-                <span class="info-icon">📄</span>
-                <span class="info-label">论文：2篇</span>
+              <div class="item-info">
+                <div class="info-item">
+                  <span class="info-icon">📄</span>
+                  <span class="info-label">论文：3篇</span>  <!-- 需要修改 -->
+                </div>
+                <div class="info-item">
+                  <span class="info-icon">🔬</span>
+                  <span class="info-label">专利：x项</span>  <!-- 需要修改 -->
+                </div>
+                <div class="info-item">
+                  <span class="info-icon">🏆</span>
+                  <span class="info-label">获奖：x项</span>  <!-- 需要修改 -->
+                </div>
               </div>
-              <div class="info-item">
-                <span class="info-icon">🔬</span>
-                <span class="info-label">专利：1项</span>
+              <div class="item-footer">
+                <div class="graduate-company">
+                  <span class="info-icon">🏢</span>
+                  <span>南方电网</span>  <!-- 需要修改 -->
+                </div>
+                <div class="tag">算法工程师</div>  <!-- 需要修改 -->
               </div>
-            </div>
-            <div class="graduate-footer">
-              <div class="graduate-company">
-                <span class="info-icon">🏢</span>
-                <span>就业单位：腾讯科技有限公司</span>
-              </div>
-              <div class="tag">算法工程师</div>
             </div>
           </div>
         </div>

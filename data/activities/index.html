@@ -12,14 +12,82 @@
     .item-card {
       background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 0;
       margin-bottom: 20px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
+      position: relative;
     }
     .item-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+    }
+    .item-thumbnail {
+      background: var(--bg-secondary);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+    .item-thumbnail img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease;
+    }
+    .item-card:hover .item-thumbnail img {
+      transform: scale(1.05);
+    }
+    .item-thumbnail-placeholder {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 48px;
+      font-weight: bold;
+    }
+    .activity-type-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .activity-type-badge.sports {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+    }
+    .activity-type-badge.celebration {
+      background: linear-gradient(135deg, #feca57, #ff9f43);
+    }
+    .activity-type-badge.academic {
+      background: linear-gradient(135deg, #5f27cd, #341f97);
+    }
+    .activity-type-badge.team {
+      background: linear-gradient(135deg, #00d2d3, #01a3a4);
+    }
+    .activity-type-badge.outdoor {
+      background: linear-gradient(135deg, #26de81, #20bf6b);
+    }
+    .item-content-wrapper {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
     }
     .item-title {
       font-size: 22px;
@@ -51,6 +119,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
     }
     .item-author {
       display: flex;
@@ -72,14 +141,18 @@
     .item-link:hover {
       color: var(--primary-dark);
     }
-    .tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      background: linear-gradient(135deg, #0066cc, #004499);
-      color: #fff;
+    .item-card[data-date] {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .empty {
       text-align: center;
@@ -92,7 +165,6 @@
     }
   </style>
 </head>
-
 <body>
   <!-- 统一导航栏 -->
   <div id="navbar-container"></div>
@@ -106,29 +178,39 @@
         </div>
         
         <div id="contentList">
-          <div class="item-card">
-            <h3 class="item-title">智能系统实验室十周年庆典</h3>
-            <div class="item-meta">
-              <span>📅 2025年6月18日</span>
-              <span>📍 北京海淀会议中心</span>
-              <span>👥 全体成员</span>
-              <span class="tag">周年庆</span>
+          <!-- 活动卡片 - 按活动日期排序 -->
+
+          <!-- ----------------------- -->
+          <div class="item-card" data-date="2025-12-11">  <!-- 需要修改 -->
+            <div class="item-thumbnail">
+              <img src="20251211羽毛球赛/羽毛球赛.jpg" alt="羽毛球比赛" />  <!-- 需要修改 -->
             </div>
-            <p class="item-content">
-              2025年6月18日，智能系统实验室隆重举办成立十周年庆典活动。本次庆典汇聚了实验室全体成员、历届毕业生代表以及特邀嘉宾，共同回顾实验室十年发展历程，展望未来发展方向。活动包括开幕式、成果展示、主题演讲、文艺表演和晚宴等环节，充分展现了实验室的学术氛围和文化特色。
-            </p>
-            <div class="item-footer">
-              <div class="item-author">
-                <img src="../../lab-logo.png" alt="实验室" />
-                <span>智能系统实验室</span>
+            <div class="activity-type-badge sports">🏸 体育运动</div>  <!-- 需要修改，体育运动/户外活动二选一 -->
+            <div class="item-content-wrapper">
+              <div class="item-title">智能系统实验室2025年羽毛球友谊赛</div>  <!-- 需要修改 -->
+              <div class="item-meta">
+                <span>📅 2025年12月11日</span>  <!-- 需要修改 -->
+                <span>📍 游泳馆</span>  <!-- 需要修改 -->
+                <span>👥 全体成员</span>  <!-- 需要修改 -->
               </div>
-              <a href="Ten_Years_Anniversary/index.html" class="item-link">查看详情 →</a>
+              <div class="item-content">  <!-- 需要修改 -->
+                <p>2025年12月11日，智能系统实验室举办一年一度的羽毛球友谊赛活动。本次活动由实验室全体学生共同参与，不仅锻炼了身体，也增进了团队成员之间的友谊。</p>
+              </div>
+              <div class="item-footer">
+                <div class="item-author">
+                  <img src="../../lab-logo.png" alt="实验室" />
+                  <span>智能系统实验室</span>
+                </div>
+                <a href="20251211羽毛球赛/index.html" class="item-link">查看详情 →</a>  <!-- 需要修改 -->
+              </div>
             </div>
           </div>
+          <!-- ----------------------- -->
+
         </div>
       </div>
     </section>
-  </main>  
+  </main>
   
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
