@@ -200,76 +200,17 @@
             <div class="members-content">
                 <section id="all-members" class="members-section">
                     <h2>所有成员</h2>
-                    <div class="member-grid">
-                        <a href="teachers/Jiangwen_Xiao/index.html" class="member-card">
-                            <div class="member-card-header">
-                                <img src="teachers/Jiangwen_Xiao/Jiangwen_Xiao_card.jpg" alt="肖江文" class="member-card-avatar" onerror="this.src='../../lab-logo.png'">
-                                <div>
-                                    <div class="member-card-name">肖江文</div>
-                                    <div class="member-card-role">教授、博士生导师</div>
-                                </div>
-                            </div>
-                            <div class="member-card-info">
-                                <p>📧 jwxiao@hust.edu.cn</p>
-                                <p>🎓 人工智能及在电力和能源系统中的应用</p>
-                                <span class="member-card-badge badge-teacher">教师</span>
-                            </div>
-                        </a>
-                        <a href="students/Junjie_Ding/index.html" class="member-card">
-                            <div class="member-card-header">
-                                <img src="students/Junjie_Ding/Junjie_Ding_avatar.jpg" alt="丁俊杰" class="member-card-avatar" onerror="this.src='../../lab-logo.png'">
-                                <div>
-                                    <div class="member-card-name">丁俊杰</div>
-                                    <div class="member-card-role">2024级硕士研究生</div>
-                                </div>
-                            </div>
-                            <div class="member-card-info">
-                                <p>📧 junjieding@hust.edu.cn</p>
-                                <p>🎓 时序预测</p>
-                                <span class="member-card-badge badge-student">学生</span>
-                            </div>
-                        </a>
-                    </div>
+                    <div class="member-grid" id="members-grid-all"></div>
                 </section>
 
                 <section id="teachers" class="members-section" style="display: none;">
                     <h2>教师列表</h2>
-                    <div class="member-grid">
-                        <a href="teachers/Jiangwen_Xiao/index.html" class="member-card">
-                            <div class="member-card-header">
-                                <img src="teachers/Jiangwen_Xiao/Jiangwen_Xiao_card.jpg" alt="肖江文" class="member-card-avatar" onerror="this.src='../../lab-logo.png'">
-                                <div>
-                                    <div class="member-card-name">肖江文</div>
-                                    <div class="member-card-role">教授、博士生导师</div>
-                                </div>
-                            </div>
-                            <div class="member-card-info">
-                                <p>📧 jwxiao@hust.edu.cn</p>
-                                <p>🎓 人工智能及在电力和能源系统中的应用</p>
-                                <span class="member-card-badge badge-teacher">教师</span>
-                            </div>
-                        </a>
-                    </div>
+                    <div class="member-grid" id="members-grid-teachers"></div>
                 </section>
 
                 <section id="students" class="members-section" style="display: none;">
                     <h2>学生列表</h2>
-                    <div class="member-grid">
-                        <a href="students/Junjie_Ding/index.html" class="member-card">
-                            <div class="member-card-header">
-                                <img src="students/Junjie_Ding/Junjie_Ding_avatar.jpg" alt="丁俊杰" class="member-card-avatar" onerror="this.src='../../lab-logo.png'">
-                                <div>
-                                    <div class="member-card-name">丁俊杰</div>
-                                    <div class="member-card-role">2024级硕士研究生</div>
-                                </div>
-                            </div>
-                            <div class="member-card-info">
-                                <p>📧 junjieding@hust.edu.cn</p>
-                                <p>🎓 时序预测</p>
-                                <span class="member-card-badge badge-student">学生</span>
-                            </div>
-                        </a>
-                    </div>
+                    <div class="member-grid" id="members-grid-students"></div>
                 </section>
             </div>
         </div>
@@ -277,6 +218,88 @@
 
     <script src="../../js/search.js"></script>
     <script>
+        // 成员数据集中存储
+        const membersData = [
+            {
+                type: 'teacher',
+                name: '王燕舞',
+                role: '教授、博士生导师',
+                email: 'wangyw@hust.edu.cn',
+                avatar: 'teachers/Yanwu_Wang/王燕舞.png',
+                link: 'teachers/Yanwu_Wang/index.html',
+                research: ['基于深度学习的混杂数据挖掘、分析与预测', '基于强化学习的分布式协同优化调度', '基于群体智能的多尺度分布式协同控制']
+            },
+            {
+                type: 'teacher',
+                name: '肖江文',
+                role: '教授、博士生导师',
+                email: 'jwxiao@hust.edu.cn',
+                avatar: 'teachers/Jiangwen_Xiao/肖江文.png',
+                link: 'teachers/Jiangwen_Xiao/index.html',
+                research: ['人工智能及在电力和能源系统中的应用', '基于群体智能的多尺度分布式协同控制']
+            },
+            {
+                type: 'teacher',
+                name: '刘骁康',
+                role: '副教授',
+                email: 'xiaokangliu@hust.edu.cn',
+                avatar: 'teachers/Xiaokang_Liu/刘骁康.png',
+                link: 'teachers/Xiaokang_Liu/index.html',
+                research: ['智能电网的控制与优化', '分布式协同与群集智能']
+            },
+            {
+                type: 'student',
+                name: '丁俊杰',
+                role: '2024级硕士研究生',
+                email: 'junjieding@hust.edu.cn',
+                avatar: 'students/Junjie_Ding/丁俊杰.jpg',
+                link: 'students/Junjie_Ding/index.html',
+                research: ['时序预测']
+            },
+        ];
+
+        // 渲染成员卡片
+        function renderMemberCards(containerId, members) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (members.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <p>暂无成员信息</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = members.map(member => `
+                <a href="${member.link}" class="member-card">
+                    <div class="member-card-header">
+                        <img src="${member.avatar}" alt="${member.name}" class="member-card-avatar" onerror="this.src='../../lab-logo.png'">
+                        <div>
+                            <div class="member-card-name">${member.name}</div>
+                            <div class="member-card-role">${member.role}</div>
+                        </div>
+                    </div>
+                    <div class="member-card-info">
+                        <p>📧 ${member.email}</p>
+                        ${member.research.map(r => `<p>🎓 ${r}</p>`).join('')}
+                        <span class="member-card-badge badge-${member.type}">${member.type === 'teacher' ? '教师' : '学生'}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // 根据类型过滤成员
+        function filterMembers(type) {
+            if (type === 'all') {
+                return membersData;
+            }
+            return membersData.filter(m => m.type === type);
+        }
+
+        // 切换section并渲染对应成员
         function switchSection(sectionId, element) {
             // 隐藏所有section
             document.querySelectorAll('.members-section').forEach(section => {
@@ -290,27 +313,59 @@
             document.querySelectorAll('.side-nav a').forEach(link => {
                 link.classList.remove('active');
             });
-            element.classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // 如果没有传入element，根据hash查找
+                document.querySelectorAll('.side-nav a').forEach(a => {
+                    if (a.getAttribute('href') === '#' + sectionId) {
+                        a.classList.add('active');
+                    }
+                });
+            }
+
+            // 根据sectionId过滤并渲染成员
+            let membersType = 'all';
+            if (sectionId === 'teachers') membersType = 'teacher';
+            if (sectionId === 'students') membersType = 'student';
+
+            const filteredMembers = filterMembers(membersType);
+            renderMemberCards(`members-grid-${sectionId}`, filteredMembers);
 
             // 阻止默认跳转
             return false;
         }
 
+        // 初始化所有section的成员数据
+        function initializeAllSections() {
+            renderMemberCards('members-grid-all', filterMembers('all'));
+            renderMemberCards('members-grid-teachers', filterMembers('teacher'));
+            renderMemberCards('members-grid-students', filterMembers('student'));
+        }
+
         // 根据URL锚点自动切换
         window.addEventListener('load', function() {
+            // 先初始化所有section的数据
+            initializeAllSections();
+
+            // 再根据hash切换显示
             const hash = window.location.hash.substring(1);
             if (hash) {
                 const section = document.getElementById(hash);
                 if (section) {
-                    document.querySelectorAll('.members-section').forEach(s => s.style.display = 'none');
-                    section.style.display = 'block';
-                    document.querySelectorAll('.side-nav a').forEach(a => {
-                        a.classList.remove('active');
-                        if (a.getAttribute('href') === '#' + hash) {
-                            a.classList.add('active');
-                        }
-                    });
+                    switchSection(hash);
                 }
+            } else {
+                // 默认显示所有成员
+                switchSection('all-members');
+            }
+        });
+
+        // 监听hash变化
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                switchSection(hash);
             }
         });
     </script>

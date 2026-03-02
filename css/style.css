@@ -1107,9 +1107,10 @@ body {
 
 .footer-logo img {
   height: 50px;
-  width: 50px;
+  width: auto;
   filter: drop-shadow(0 3px 15px rgba(0, 0, 0, 0.3));
   transition: transform 0.3s ease;
+  object-fit: contain;
 }
 
 .footer-logo:hover img {

@@ -150,33 +150,7 @@
         </div>
 
         <div id="contentList">
-          <!-- 新闻卡片 - 按发布时间排序 -->
-
-          <!-- ----------------------- -->
-          <div class="item-card" data-date="2024-12-15">
-            <div class="item-thumbnail">
-              <img src="../../lab-logo.png" alt="国家科技进步奖" />
-            </div>
-            <div class="item-content-wrapper">
-              <div class="item-title">智能系统实验室研究成果获国家科技进步二等奖</div>
-              <div class="item-meta">
-                <span>📅 2024-12-15</span>
-                <span>🏆 国家级奖项</span>
-                <span>📍 北京</span>
-              </div>
-              <div class="item-content">
-                实验室王燕舞教授团队完成的"电网分布式协同控制关键技术及应用"项目荣获国家科技进步二等奖，标志着该领域研究已达到国内领先、国际先进水平。
-              </div>
-              <div class="item-footer">
-                <div class="item-author">
-                  <span>🏷️</span>
-                  <span>获奖新闻</span>
-                </div>
-                <a href="Lab_Anniversary_2025/index.html" class="btn btn-sm">查看详情</a>
-              </div>
-            </div>
-          </div>
-          <!-- ----------------------- -->
+          <!-- 新闻卡片将通过JS自动加载并排序 -->
         </div>
       </div>
     </section>
@@ -184,6 +158,72 @@
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script>
+    // 新闻数据列表 - 按时间从新到旧排列
+    const newsData = [
+      {
+        date: '2025-12-15',
+        thumbnail: '20251215人工智能与自动化学院关于开展2026年硕博连读工作的安排/封面图.png',
+        title: '人工智能与自动化学院关于开展2026年硕博连读工作的安排',
+        location: '华中科技大学人工智能与自动化学院',
+        summary: '根据《华中科技大学研究生硕博连读、临床转博管理办法》（校研〔2020〕12号）的相关规定以及校研究生院《关于开展2026年研究生硕博连读、临床转博工作的通知》要求，现将学院开展2026年硕博连读工作安排通知如下。',
+        author: '学院公告',
+        link: '20251215人工智能与自动化学院关于开展2026年硕博连读工作的安排/index.html'
+      },
+    ];
 
+    // 按日期从新到旧排序（最新的在前）
+    function sortNewsByDate() {
+      return newsData.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA; // 降序：从新到旧
+      });
+    }
+
+    // 渲染新闻卡片
+    function renderNewsCards() {
+      const container = document.getElementById('contentList');
+      const sortedNews = sortNewsByDate(); // 使用排序后的数据
+
+      if (sortedNews.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📰</div>
+            <p>暂无新闻</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sortedNews.map(news => `
+        <div class="item-card" data-date="${news.date}">
+          <div class="item-thumbnail">
+            <img src="${news.thumbnail}" alt="${news.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+          </div>
+          <div class="item-content-wrapper">
+            <div class="item-title">${news.title}</div>
+            <div class="item-meta">
+              <span>📅 ${news.date}</span>
+              <span>📍 ${news.location}</span>
+            </div>
+            <div class="item-content">
+              ${news.summary}
+            </div>
+            <div class="item-footer">
+              <div class="item-author">
+                <span>🏷️</span>
+                <span>${news.author}</span>
+              </div>
+              <a href="${news.link}" class="btn btn-sm">查看详情</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 页面加载完成后自动渲染
+    window.addEventListener('load', renderNewsCards);
+  </script>
 </body>
 </html>

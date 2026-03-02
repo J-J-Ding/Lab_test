@@ -164,53 +164,115 @@
           <h2>成员去向</h2>
           <p class="section-subtitle">Graduate Career</p>
         </div>
-        
+
         <div id="contentList">
-          <!-- 陈悦江 - 2025届 -->
-          <div class="item-card" data-year="2025">
-            <div class="item-thumbnail">
-              <img src="figs/陈悦江.jpg" alt="陈悦江" />  <!-- 需要修改 -->
-            </div>
-            <div class="item-content-wrapper">
-              <div class="item-title">陈悦江</div>  <!-- 需要修改 -->
-              <div class="item-meta">
-                <span>📅 2025届</span>  <!-- 需要修改 -->
-                <span>🎓 硕士学位</span>  <!-- 需要修改 -->
-                <span>🔬 深度学习</span>  <!-- 需要修改 -->
-              </div>
-              <div class="item-content">  <!-- 需要修改 -->
-                <p>陈悦江同学于2022年加入智能系统实验室。在读期间，主要从事深度学习与时间序列预测相关研究，参与多项国家级项目，发表高水平论文3篇。</p>
-              </div>
-              <div class="item-info">
-                <div class="info-item">
-                  <span class="info-icon">📄</span>
-                  <span class="info-label">论文：3篇</span>  <!-- 需要修改 -->
-                </div>
-                <div class="info-item">
-                  <span class="info-icon">🔬</span>
-                  <span class="info-label">专利：x项</span>  <!-- 需要修改 -->
-                </div>
-                <div class="info-item">
-                  <span class="info-icon">🏆</span>
-                  <span class="info-label">获奖：x项</span>  <!-- 需要修改 -->
-                </div>
-              </div>
-              <div class="item-footer">
-                <div class="graduate-company">
-                  <span class="info-icon">🏢</span>
-                  <span>南方电网</span>  <!-- 需要修改 -->
-                </div>
-                <div class="tag">算法工程师</div>  <!-- 需要修改 -->
-              </div>
-            </div>
-          </div>
+          <!-- 毕业生卡片将通过JS自动加载并排序 -->
         </div>
       </div>
     </section>
   </main>
-  
+
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script>
+    // 毕业生数据列表 - 按年份从新到老排列
+    const graduatesData = [
+      {
+        year: '2025',
+        name: '陈悦江',
+        degree: '硕士学位',
+        field: '深度学习',
+        summary: '陈悦江同学于2022年加入智能系统实验室。在读期间，主要从事深度学习与时间序列预测相关研究，参与多项国家级项目，发表高水平论文3篇。',
+        papers: '3篇',
+        patents: '1项',
+        awards: '1项',
+        company: '南方电网',
+        position: '算法工程师',
+        photo: 'figs/陈悦江.jpg'
+      },
+      // 在此处添加更多毕业生，格式如下：
+      // {
+      //   year: 'YYYY',
+      //   name: '姓名',
+      //   degree: '学位',
+      //   field: '研究方向',
+      //   summary: '个人简介',
+      //   papers: '论文数量',
+      //   patents: '专利数量',
+      //   awards: '获奖数量',
+      //   company: '去向',
+      //   position: '职位',
+      //   photo: '照片路径'
+      // },
+    ];
 
+    // 按年份从新到旧排序（最新的在前）
+    function sortGraduatesByYear() {
+      return graduatesData.sort((a, b) => {
+        const yearA = parseInt(a.year);
+        const yearB = parseInt(b.year);
+        return yearB - yearA; // 降序：从新到旧
+      });
+    }
+
+    // 渲染毕业生卡片
+    function renderGraduateCards() {
+      const container = document.getElementById('contentList');
+      const sortedGraduates = sortGraduatesByYear(); // 使用排序后的数据
+
+      if (sortedGraduates.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🎓</div>
+            <p>暂无毕业生记录</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sortedGraduates.map(graduate => `
+        <div class="item-card" data-year="${graduate.year}">
+          <div class="item-thumbnail">
+            <img src="${graduate.photo}" alt="${graduate.name}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+          </div>
+          <div class="item-content-wrapper">
+            <div class="item-title">${graduate.name}</div>
+            <div class="item-meta">
+              <span>📅 ${graduate.year}届</span>
+              <span>🎓 ${graduate.degree}</span>
+              <span>🔬 ${graduate.field}</span>
+            </div>
+            <div class="item-content">
+              <p>${graduate.summary}</p>
+            </div>
+            <div class="item-info">
+              <div class="info-item">
+                <span class="info-icon">📄</span>
+                <span class="info-label">论文：${graduate.papers}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">🔬</span>
+                <span class="info-label">专利：${graduate.patents}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">🏆</span>
+                <span class="info-label">获奖：${graduate.awards}</span>
+              </div>
+            </div>
+            <div class="item-footer">
+              <div class="graduate-company">
+                <span class="info-icon">🏢</span>
+                <span>${graduate.company}</span>
+              </div>
+              <div class="tag">${graduate.position}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 页面加载完成后自动渲染
+    window.addEventListener('load', renderGraduateCards);
+  </script>
 </body>
 </html>

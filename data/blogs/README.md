@@ -284,45 +284,19 @@ import numpy as np
 
 创建完博客详情页后，需要在 `data/blogs/index.html` 中添加博客卡片：
 
-### 操作步骤
-
-1. 打开 `data/blogs/index.html`
-2. 在 `<!-- 博客卡片 - 按发布时间排序 -->` 注释后添加新卡片
-3. 按日期降序排列（最新的博客在最上面）
-
-### 博客卡片模板
-
-```html
-<!-- 博客标题 - 按发布时间排序 -->
-<div class="item-card" data-date="2025-01-15">
-  <div class="item-thumbnail">
-    <div class="item-thumbnail-placeholder">📝</div>
-  </div>
-  <div class="item-content-wrapper">
-    <div class="item-title">卷积神经网络详解</div>
-    <div class="item-meta">
-      <span>👤 张三</span>
-      <span>📅 2025年1月15日</span>
-      <span>🏷️ 深度学习</span>
-    </div>
-    <div class="item-content">
-      <p>卷积神经网络（Convolutional Neural Network, CNN）是深度学习中最常用的神经网络之一，特别适合处理图像数据...</p>
-    </div>
-    <div class="item-footer">
-      <div class="item-author">
-        <img src="../../lab-logo.png" alt="实验室" />
-        <span>智能系统实验室</span>
-      </div>
-      <a href="CNN_Tutorial/index.html" class="item-link">阅读更多 →</a>
-    </div>
-  </div>
-</div>
-```
+{
+date: 'YYYY-MM-DD',
+thumbnail: '博客文件夹/封面图.png',
+title: '博客标题',
+author: '作者姓名',
+category: '博客分类',
+summary: '博客摘要或简介',
+link: '博客文件夹/index.html'
+},
 
 **重要提示：**
-- `data-date` 属性：格式为 `YYYY-MM-DD`
+- `data` 属性：格式为 `YYYY-MM-DD`
 - `href` 链接：指向新创建的博客文件中的index.html
-- 占位符图标：根据博客类型选择合适的 emoji
 - 摘要：从博客详情页的摘要部分复制或提炼
 
 ---

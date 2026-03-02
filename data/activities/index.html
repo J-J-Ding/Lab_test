@@ -176,44 +176,112 @@
           <h2>团建活动</h2>
           <p class="section-subtitle">Activities</p>
         </div>
-        
+
         <div id="contentList">
-          <!-- 活动卡片 - 按活动日期排序 -->
-
-          <!-- ----------------------- -->
-          <div class="item-card" data-date="2025-12-11">  <!-- 需要修改 -->
-            <div class="item-thumbnail">
-              <img src="20251211羽毛球赛/羽毛球赛.jpg" alt="羽毛球比赛" />  <!-- 需要修改 -->
-            </div>
-            <div class="activity-type-badge sports">🏸 体育运动</div>  <!-- 需要修改，体育运动/户外活动二选一 -->
-            <div class="item-content-wrapper">
-              <div class="item-title">智能系统实验室2025年羽毛球友谊赛</div>  <!-- 需要修改 -->
-              <div class="item-meta">
-                <span>📅 2025年12月11日</span>  <!-- 需要修改 -->
-                <span>📍 游泳馆</span>  <!-- 需要修改 -->
-                <span>👥 全体成员</span>  <!-- 需要修改 -->
-              </div>
-              <div class="item-content">  <!-- 需要修改 -->
-                <p>2025年12月11日，智能系统实验室举办一年一度的羽毛球友谊赛活动。本次活动由实验室全体学生共同参与，不仅锻炼了身体，也增进了团队成员之间的友谊。</p>
-              </div>
-              <div class="item-footer">
-                <div class="item-author">
-                  <img src="../../lab-logo.png" alt="实验室" />
-                  <span>智能系统实验室</span>
-                </div>
-                <a href="20251211羽毛球赛/index.html" class="item-link">查看详情 →</a>  <!-- 需要修改 -->
-              </div>
-            </div>
-          </div>
-          <!-- ----------------------- -->
-
+          <!-- 活动卡片将通过JS自动加载并排序 -->
         </div>
       </div>
     </section>
   </main>
-  
+
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script>
+    // 活动数据列表 - 按时间从新到老排列
+    const activitiesData = [
+      {
+        date: '2025-12-11',
+        thumbnail: '20251211羽毛球赛/羽毛球赛.jpg',
+        title: '智能系统实验室2025年羽毛球友谊赛',
+        location: '体育馆',
+        participants: '全体成员',
+        type: 'sports',
+        typeName: '🏸 体育运动',
+        summary: '2025年12月11日，智能系统实验室举办一年一度的羽毛球友谊赛活动。本次活动由实验室全体学生共同参与，不仅锻炼了身体，也增进了团队成员之间的友谊。',
+        author: '智能系统实验室',
+        link: '20251211羽毛球赛/index.html'
+      },
+      // 在此处添加更多活动，格式如下：
+      // {
+      //   date: 'YYYY-MM-DD',
+      //   thumbnail: '文件夹/封面图.jpg',
+      //   title: '活动标题',
+      //   location: '活动地点',
+      //   participants: '参与人员',
+      //   type: 'sports'/'celebration'/'academic'/'team'/'outdoor',
+      //   typeName: '类型名称',
+      //   summary: '活动简介',
+      //   author: '组织单位',
+      //   link: '文件夹/index.html'
+      // },
+    ];
 
+    // 按日期从新到旧排序（最新的在前）
+    function sortActivitiesByDate() {
+      return activitiesData.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA; // 降序：从新到旧
+      });
+    }
+
+    // 获取活动类型对应的类名
+    function getActivityTypeClass(type) {
+      const typeMap = {
+        'sports': 'sports',
+        'celebration': 'celebration',
+        'academic': 'academic',
+        'team': 'team',
+        'outdoor': 'outdoor'
+      };
+      return typeMap[type] || 'sports';
+    }
+
+    // 渲染活动卡片
+    function renderActivityCards() {
+      const container = document.getElementById('contentList');
+      const sortedActivities = sortActivitiesByDate(); // 使用排序后的数据
+
+      if (sortedActivities.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">🎉</div>
+            <p>暂无活动</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sortedActivities.map(activity => `
+        <div class="item-card" data-date="${activity.date}">
+          <div class="item-thumbnail">
+            <img src="${activity.thumbnail}" alt="${activity.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+          </div>
+          <div class="activity-type-badge ${getActivityTypeClass(activity.type)}">${activity.typeName}</div>
+          <div class="item-content-wrapper">
+            <div class="item-title">${activity.title}</div>
+            <div class="item-meta">
+              <span>📅 ${activity.date}</span>
+              <span>📍 ${activity.location}</span>
+              <span>👥 ${activity.participants}</span>
+            </div>
+            <div class="item-content">
+              <p>${activity.summary}</p>
+            </div>
+            <div class="item-footer">
+              <div class="item-author">
+                <img src="../../lab-logo.png" alt="实验室" />
+                <span>${activity.author}</span>
+              </div>
+              <a href="${activity.link}" class="item-link">查看详情 →</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 页面加载完成后自动渲染
+    window.addEventListener('load', renderActivityCards);
+  </script>
 </body>
 </html>

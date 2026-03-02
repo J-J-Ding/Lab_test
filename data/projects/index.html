@@ -150,29 +150,7 @@
         </div>
 
         <div id="contentList">
-          <!-- 项目卡片 - 按开始时间排序 -->
-          <div class="item-card" data-date="2025">
-            <div class="item-thumbnail">
-              <img src="../../lab-logo.png" alt="电网分布式协同控制" />
-            </div>
-            <div class="item-content-wrapper">
-              <div class="item-title">电网分布式协同控制</div>
-              <div class="item-meta">
-                <span>🏷️ 国家自然科学重点项目</span>
-                <span>📅 2025-2027</span>
-              </div>
-              <div class="item-content">
-                本项目聚焦电网分布式协同控制领域，促进电网及时调度。针对大规模电网系统的协同调度与优化控制问题开展深入研究，构建适用于大规模电网的分布式协同控制体系。
-              </div>
-              <div class="item-footer">
-                <div class="item-author">
-                  <span>👤</span>
-                  <a href="../members/index.html" class="item-link">王燕舞</a>
-                </div>
-                <a href="Grid_Distributed_Control/index.html" class="btn btn-sm">查看详情</a>
-              </div>
-            </div>
-          </div>
+          <!-- 项目卡片由 JavaScript 自动渲染和排序 -->
         </div>
       </div>
     </section>
@@ -180,6 +158,75 @@
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script>
+    // 项目数据 - 所有项目信息集中在这里管理，无需手动排序
+    const projectsData = [
+      {
+        date: '2025',
+        thumbnail: '202505Grid_Distributed_Control/封面图.png',
+        title: 'xxxx',
+        category: '国家自然科学重点项目',
+        period: '2025-2027',
+        summary: '本项目聚焦xxx',
+        authors: '王燕舞, 肖江文',
+        link: '202505Grid_Distributed_Control/index.html'
+      },
+    ];
+
+    // 按年份自动排序（从新到旧）
+    function sortProjectsByDate() {
+      return projectsData.sort((a, b) => {
+        const yearA = parseInt(a.date);
+        const yearB = parseInt(b.date);
+        return yearB - yearA; // 降序：从新到旧
+      });
+    }
+
+    // 渲染项目卡片
+    function renderProjectCards() {
+      const contentList = document.getElementById('contentList');
+      const sortedProjects = sortProjectsByDate();
+
+      if (sortedProjects.length === 0) {
+        contentList.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📋</div>
+            <h3>暂无项目</h3>
+            <p>敬请期待...</p>
+          </div>
+        `;
+        return;
+      }
+
+      contentList.innerHTML = sortedProjects.map(project => `
+        <div class="item-card" data-date="${project.date}">
+          <div class="item-thumbnail">
+            <img src="${project.thumbnail}" alt="项目封面图" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
+          </div>
+          <div class="item-content-wrapper">
+            <div class="item-title">${project.title}</div>
+            <div class="item-meta">
+              <span>🏷️ ${project.category}</span>
+              <span>📅 ${project.period}</span>
+            </div>
+            <div class="item-content">
+              ${project.summary}
+            </div>
+            <div class="item-footer">
+              <div class="item-author">
+                <span>👤</span>
+                <a href="../members/index.html" class="item-link">${project.authors}</a>
+              </div>
+              <a href="${project.link}" class="btn btn-sm">查看详情</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 页面加载完成后自动渲染
+    document.addEventListener('DOMContentLoaded', renderProjectCards);
+  </script>
 
 </body>
 </html>

@@ -203,54 +203,31 @@ cp data/competitions/20261228金融科技竞赛/index.html data/competitions/你
 
 创建完竞赛详情页后，需要在 `data/competitions/index.html` 中添加竞赛卡片：
 
-### 操作步骤
-
-1. 打开 `data/competitions/index.html`
-2. 在 `<!-- 竞赛卡片 - 按获奖时间排序 -->` 注释后添加新卡片
-3. 按日期降序排列（最新的竞赛在最上面）
-
-### 竞赛卡片模板
-
-```html
-<!-- 竞赛名称 - 按获奖时间排序 -->
-<div class="item-card" data-date="2025-12-28">
-  <div class="item-thumbnail">
-    <img src="20261228金融科技竞赛/封面图.jpg" alt="竞赛名称" />
-  </div>
-  <div class="item-content-wrapper">
-    <div class="item-title">第四届中国研究生金融科技创新大赛</div>
-    <div class="item-meta">
-      <span>🏆 国家级特等奖</span>
-      <span>📅 2025-12-28</span>
-    </div>
-    <div class="item-content">
-      <p>第四届中国研究生金融科技创新大赛全国总决赛于2025年12月26日至28日在南京市建邺区举办。我院学子在本次比赛中奋勇争先，凭借扎实的科研功底与突出的创新能力，在八强争冠赛中斩获季军（全国第三名）...</p>
-    </div>
-    <div class="item-footer">
-      <div class="item-author">
-        <span>👤 张三、李四、王五</span>
-      </div>
-      <a href="20261228金融科技竞赛/index.html" class="btn btn-sm">查看详情</a>
-    </div>
-  </div>
-</div>
-```
-
+{
+        date: 'YYYY-MM-DD',
+        thumbnail: '竞赛文件夹/封面图.jpg',
+        title: '竞赛名称',
+        award: '获奖等级',
+        summary: '竞赛简介或获奖情况',
+        members: '获奖成员',
+        link: '竞赛文件夹/index.html'
+      },
+      
 **重要提示：**
 - `data-date` 属性：格式为 `YYYY-MM-DD`（获奖日期）
 - `src` 路径：`竞赛文件夹名/封面图.jpg`
 - `href` 链接：`竞赛文件夹名/index.html`
-- 参与成员：列出所有获奖学生姓名，用顿号、分隔
+- 参与成员：列出所有获奖学生姓名，用英文逗号+空格(, )分隔
 
 ---
 
 ## 📸 图片管理
 
-### 封面图（推荐）
+### 封面图
 
 - **建议尺寸：** 1200×630px（16:9比例）
 - **建议格式：** JPG（照片类）或 PNG（图表类）
-- **文件名：** `封面图.jpg` 或 `cover.jpg`
+- **文件名：** `封面图.jpg`
 - **内容：** 竞赛Logo、获奖照片、项目截图等
 
 ### 获奖证书
@@ -305,55 +282,3 @@ cp data/competitions/20261228金融科技竞赛/index.html data/competitions/你
 - [ ] 参与成员已列出
 
 ---
-
-## 🎯 完整示例
-
-### 示例1：创建"2025年全国大学生数学建模竞赛"竞赛
-
-**文件夹：** `data/competitions/20250914数学建模竞赛/`
-
-**详情页关键内容：**
-```html
-<title>2025年全国大学生数学建模竞赛 - 智能系统实验室</title>
-<h1 class="competition-title">2025年全国大学生数学建模竞赛</h1>
-
-<!-- 赛事简介 -->
-<p>全国大学生数学建模竞赛创办于1992年，每年一届，是首批列入"高校学科竞赛排行榜"的竞赛之一。竞赛面向全国高校本科生和研究生，旨在培养学生的创新意识及运用数学方法和计算机技术解决实际问题的能力。</p>
-
-<!-- 作品简介 -->
-<p>本项目针对城市交通拥堵问题，建立基于深度学习的交通流量预测模型。创新性地融合时空特征提取与注意力机制，实现了对短时交通流量的精准预测。模型在测试集上达到MAE=2.3，RMSE=3.1的优异性能，为城市交通管理提供了有效的决策支持工具。</p>
-
-<!-- 获奖信息 -->
-<span class="award-value">国家级一等奖</span>
-<span class="award-value">2025年9月14日</span>
-<span class="award-value">教育部高等教育司</span>
-
-<!-- 相关链接 -->
-<a href="https://www.mcm.edu.cn/" target="_blank">竞赛官网</a>
-<a href="获奖证书.png" target="_blank">获奖证书</a>
-```
-
-**列表页卡片：**
-```html
-<div class="item-card" data-date="2025-09-14">
-  <div class="item-thumbnail">
-    <img src="20250914数学建模竞赛/封面图.jpg" alt="数学建模竞赛" />
-  </div>
-  <div class="item-content-wrapper">
-    <div class="item-title">2025年全国大学生数学建模竞赛</div>
-    <div class="item-meta">
-      <span>🏆 国家级一等奖</span>
-      <span>📅 2025-09-14</span>
-    </div>
-    <div class="item-content">
-      <p>2025年全国大学生数学建模竞赛成绩揭晓，我校学子再创佳绩。智能系统实验室团队在众多参赛队伍中脱颖而出，凭借扎实的数学功底和出色的编程能力，荣获国家级一等奖...</p>
-    </div>
-    <div class="item-footer">
-      <div class="item-author">
-        <span>👤 张三、李四、王五</span>
-      </div>
-      <a href="20250914数学建模竞赛/index.html" class="btn btn-sm">查看详情</a>
-    </div>
-  </div>
-</div>
-```

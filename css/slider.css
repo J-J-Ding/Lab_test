@@ -4,7 +4,7 @@
   width: 100%;
   overflow: hidden;
   background: var(--bg-dark);
-  height: calc(100vh - 90px);
+  height: calc(100vh - 100px);
 }
 
 .slider-container {
@@ -45,9 +45,8 @@
 .slider-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
-  padding: 100px;
 }
 
 .slider-overlay {
@@ -56,7 +55,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0, 102, 204, 0.85), rgba(10, 22, 40, 0.9));
+  background: linear-gradient(135deg, rgba(0, 102, 204, 0.3), rgba(10, 22, 40, 0.4));
 }
 
 .slider-text {

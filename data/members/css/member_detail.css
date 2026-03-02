@@ -289,7 +289,39 @@ body {
   border-left: 3px solid rgba(102, 126, 234, 0.6);
 }
 
-/* 论文列表 */
+/* 参考文献列表 */
+.reference-list {
+  padding: 0;
+}
+
+.reference-item {
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border-left: 3px solid rgba(102, 126, 234, 0.5);
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.reference-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(8px);
+}
+
+.reference-list .reference-link {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 16px !important;
+  line-height: 1.9 !important;
+  display: block !important;
+  font-family: 'Georgia', 'Times New Roman', serif !important;
+}
+
+.reference-list .reference-link:hover {
+  color: #ffffff !important;
+}
+
+/* 论文列表（保留原有样式以备他用） */
 .paper-list {
   display: flex;
   flex-direction: column;
@@ -383,6 +415,24 @@ body {
   border-left: 3px solid rgba(102, 126, 234, 0.5);
   margin-bottom: 15px;
   transition: all 0.3s ease;
+}
+
+.project-link,
+.publication-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.project-link:hover,
+.publication-item-link:hover {
+  transform: translateX(8px);
+}
+
+.project-link:hover .project-item,
+.publication-item-link:hover .publication-item {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .project-item:hover,

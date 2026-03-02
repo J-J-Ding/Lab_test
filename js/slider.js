@@ -5,25 +5,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const dots = document.querySelectorAll('.dot');
-  
+
   let currentIndex = 0;
   const totalSlides = sliderItems.length;
   let autoPlayInterval;
-  
+
+  console.log('Slider initialized. Total slides:', totalSlides);
+
   // 初始化
   function init() {
     if (totalSlides === 0) return;
-    
-    // 设置每个轮播项的初始动画
-    sliderItems.forEach((item, index) => {
-      item.style.display = index === 0 ? 'block' : 'none';
-    });
-    
+
+    console.log('Starting slider initialization...');
+
     // 绑定事件
     bindEvents();
-    
+
     // 开始自动播放
     startAutoPlay();
+    console.log('Auto-play started');
   }
   
   // 绑定事件
@@ -113,43 +113,29 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 更新轮播显示
   function updateSlider() {
-    // 隐藏所有幻灯片
-    sliderItems.forEach((item, index) => {
-      if (index === currentIndex) {
-        item.style.display = 'block';
-        // 触发动画
-        const text = item.querySelector('.slider-text');
-        text.style.animation = 'none';
-        text.offsetHeight; // 触发回流
-        text.style.animation = 'slideUp 0.8s ease-out';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-    
+    // 使用 transform 移动轮播图
+    sliderWrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    // 触发当前幻灯片的文字动画
+    const currentText = sliderItems[currentIndex].querySelector('.slider-text');
+    currentText.style.animation = 'none';
+    currentText.offsetHeight; // 触发回流
+    currentText.style.animation = 'slideUp 0.8s ease-out';
+
     // 更新圆点状态
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === currentIndex);
     });
-    
-    // 更新按钮状态
-    if (prevBtn) {
-      prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-      prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
-    }
-    
-    if (nextBtn) {
-      nextBtn.style.opacity = currentIndex === totalSlides - 1 ? '0.5' : '1';
-      nextBtn.style.cursor = currentIndex === totalSlides - 1 ? 'not-allowed' : 'pointer';
-    }
   }
   
   // 自动播放
   function startAutoPlay() {
     stopAutoPlay();
+    console.log('Starting auto-play with 3 second interval');
     autoPlayInterval = setInterval(() => {
+      console.log('Auto-playing slide', currentIndex + 1);
       goToSlide(currentIndex + 1);
-    }, 5000); // 5秒自动切换
+    }, 3000); // 3秒自动切换
   }
   
   function stopAutoPlay() {
