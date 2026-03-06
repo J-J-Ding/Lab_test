@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>成员去向 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -168,12 +169,17 @@
         <div id="contentList">
           <!-- 毕业生卡片将通过JS自动加载并排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 毕业生数据列表 - 按年份从新到老排列
     const graduatesData = [
@@ -190,6 +196,7 @@
         position: '算法工程师',
         photo: 'figs/陈悦江.jpg'
       },
+      
       // 在此处添加更多毕业生，格式如下：
       // {
       //   year: 'YYYY',
@@ -230,7 +237,10 @@
         return;
       }
 
-      container.innerHTML = sortedGraduates.map(graduate => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedGraduates;
+
+      container.innerHTML = currentPageItems.map(graduate => `
         <div class="item-card" data-year="${graduate.year}">
           <div class="item-thumbnail">
             <img src="${graduate.photo}" alt="${graduate.name}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -271,8 +281,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderGraduateCards;
+
     // 页面加载完成后自动渲染
-    window.addEventListener('load', renderGraduateCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedGraduates = sortGraduatesByYear();
+      if (window.initPagination) {
+        window.initPagination(sortedGraduates);
+        renderGraduateCards();
+      } else {
+        renderGraduateCards();
+      }
+    });
   </script>
 </body>
 </html>

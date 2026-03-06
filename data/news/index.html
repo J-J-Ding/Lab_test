@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>新闻动态 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -152,12 +153,17 @@
         <div id="contentList">
           <!-- 新闻卡片将通过JS自动加载并排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 新闻数据列表 - 按时间从新到旧排列
     const newsData = [
@@ -170,6 +176,7 @@
         author: '学院公告',
         link: '20251215人工智能与自动化学院关于开展2026年硕博连读工作的安排/index.html'
       },
+      
     ];
 
     // 按日期从新到旧排序（最新的在前）
@@ -196,7 +203,10 @@
         return;
       }
 
-      container.innerHTML = sortedNews.map(news => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedNews;
+
+      container.innerHTML = currentPageItems.map(news => `
         <div class="item-card" data-date="${news.date}">
           <div class="item-thumbnail">
             <img src="${news.thumbnail}" alt="${news.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -222,8 +232,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderNewsCards;
+
     // 页面加载完成后自动渲染
-    window.addEventListener('load', renderNewsCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedNews = sortNewsByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedNews);
+        renderNewsCards();
+      } else {
+        renderNewsCards();
+      }
+    });
   </script>
 </body>
 </html>

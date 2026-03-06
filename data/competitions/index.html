@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>学科竞赛 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -152,12 +153,17 @@
         <div id="contentList">
           <!-- 竞赛卡片将通过JS自动加载并排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 竞赛数据列表 - 按时间从新到老排列
     const competitionsData = [
@@ -170,6 +176,7 @@
         members: '丁俊杰, 张柏珵, 陈卓, 任俊霖',
         link: '20261228金融科技竞赛/index.html'
       },
+      
       // 在此处添加更多竞赛，格式如下：
       // {
       //   date: 'YYYY-MM-DD',
@@ -206,7 +213,10 @@
         return;
       }
 
-      container.innerHTML = sortedCompetitions.map(competition => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedCompetitions;
+
+      container.innerHTML = currentPageItems.map(competition => `
         <div class="item-card" data-date="${competition.date}">
           <div class="item-thumbnail">
             <img src="${competition.thumbnail}" alt="${competition.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -231,8 +241,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderCompetitionCards;
+
     // 页面加载完成后自动渲染
-    window.addEventListener('load', renderCompetitionCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedCompetitions = sortCompetitionsByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedCompetitions);
+        renderCompetitionCards();
+      } else {
+        renderCompetitionCards();
+      }
+    });
   </script>
 </body>
 </html>

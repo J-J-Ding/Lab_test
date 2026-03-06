@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>出版刊物 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -152,12 +153,17 @@
         <div id="contentList">
           <!-- 刊物卡片由 JavaScript 自动渲染和排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 刊物数据 - 所有刊物信息集中在这里管理，无需手动排序
     const publicationsData = [
@@ -171,6 +177,7 @@
         authors: '王燕舞, 肖江文',
         link: '202506自动控制原理/index.html'
       },
+      
     ];
 
     // 按日期自动排序（从新到旧）
@@ -198,7 +205,10 @@
         return;
       }
 
-      contentList.innerHTML = sortedPublications.map(pub => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedPublications;
+
+      contentList.innerHTML = currentPageItems.map(pub => `
         <div class="item-card" data-date="${pub.date}">
           <div class="item-thumbnail">
             <img src="${pub.thumbnail}" alt="${pub.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -225,6 +235,9 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderPublicationCards;
+
     // 格式化日期（YYYY-MM -> YYYY年M月）
     function formatDate(dateStr) {
       const [year, month] = dateStr.split('-');
@@ -232,7 +245,15 @@
     }
 
     // 页面加载完成后自动渲染
-    document.addEventListener('DOMContentLoaded', renderPublicationCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedPublications = sortPublicationsByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedPublications);
+        renderPublicationCards();
+      } else {
+        renderPublicationCards();
+      }
+    });
   </script>
 
 </body>

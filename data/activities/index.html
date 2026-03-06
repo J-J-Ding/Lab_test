@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>团建活动 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -180,12 +181,17 @@
         <div id="contentList">
           <!-- 活动卡片将通过JS自动加载并排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 活动数据列表 - 按时间从新到老排列
     const activitiesData = [
@@ -201,6 +207,7 @@
         author: '智能系统实验室',
         link: '20251211羽毛球赛/index.html'
       },
+      
       // 在此处添加更多活动，格式如下：
       // {
       //   date: 'YYYY-MM-DD',
@@ -252,7 +259,10 @@
         return;
       }
 
-      container.innerHTML = sortedActivities.map(activity => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedActivities;
+
+      container.innerHTML = currentPageItems.map(activity => `
         <div class="item-card" data-date="${activity.date}">
           <div class="item-thumbnail">
             <img src="${activity.thumbnail}" alt="${activity.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -280,8 +290,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderActivityCards;
+
     // 页面加载完成后自动渲染
-    window.addEventListener('load', renderActivityCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedActivities = sortActivitiesByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedActivities);
+        renderActivityCards();
+      } else {
+        renderActivityCards();
+      }
+    });
   </script>
 </body>
 </html>

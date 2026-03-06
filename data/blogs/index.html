@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>技术博客 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -152,12 +153,17 @@
         <div id="contentList">
           <!-- 博客卡片将通过JS自动加载并排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
 
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 博客数据列表 - 按时间从新到老排列
     const blogsData = [
@@ -170,6 +176,7 @@
         summary: 'TPA-LSTM是一种结合了Transformer注意力机制和LSTM长短期记忆网络的技术，用于处理序列数据。',
         link: '20231003TPA-LSTM/index.html'
       },
+      
       // 在此处添加更多博客，格式如下：
       // {
       //   date: 'YYYY-MM-DD',
@@ -206,7 +213,10 @@
         return;
       }
 
-      container.innerHTML = sortedBlogs.map(blog => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedBlogs;
+
+      container.innerHTML = currentPageItems.map(blog => `
         <div class="item-card" data-date="${blog.date}">
           <div class="item-thumbnail">
             <img src="${blog.thumbnail}" alt="${blog.title}" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -232,8 +242,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderBlogCards;
+
     // 页面加载完成后自动渲染
-    window.addEventListener('load', renderBlogCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedBlogs = sortBlogsByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedBlogs);
+        renderBlogCards();
+      } else {
+        renderBlogCards();
+      }
+    });
   </script>
 </body>
 </html>

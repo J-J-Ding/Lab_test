@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>发表论文 - 智能系统实验室</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pagination.css" />
   <style>
     .category-content {
       padding-top: 70px;
@@ -158,12 +159,17 @@
         <div id="contentList">
           <!-- 论文卡片由 JavaScript 自动渲染和排序 -->
         </div>
+
+        <!-- 分页控件 -->
+        <div class="pagination-container" id="pagination">
+        </div>
       </div>
     </section>
   </main>
   
   <script src="../../js/search.js"></script>
   <script src="../../js/navbar-loader.js"></script>
+  <script src="../../js/pagination.js"></script>
   <script>
     // 论文数据 - 所有论文信息集中在这里管理，无需手动排序
     const papersData = [
@@ -176,6 +182,7 @@
         authors: 'Jiang-Wen Xiao, Yutao Xie, Hongliang Fang, Yan-Wu Wang',
         link: '202308_A new deep clustering method with application to customer selection for demand response program/index.html'
       },
+      
     ];
 
     // 按日期自动排序（从新到旧）
@@ -203,7 +210,10 @@
         return;
       }
 
-      contentList.innerHTML = sortedPapers.map(paper => `
+      // 使用分页数据渲染
+      const currentPageItems = window.getCurrentPageItems ? window.getCurrentPageItems() : sortedPapers;
+
+      contentList.innerHTML = currentPageItems.map(paper => `
         <div class="item-card" data-date="${paper.date}">
           <div class="item-thumbnail">
             <img src="${paper.thumbnail}" alt="paper photo" onerror="this.onerror=null; this.src='../../lab-logo.png'" />
@@ -229,8 +239,19 @@
       `).join('');
     }
 
+    // 暴露给分页模块使用的渲染函数
+    window.renderContent = renderPaperCards;
+
     // 页面加载完成后自动渲染
-    document.addEventListener('DOMContentLoaded', renderPaperCards);
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortedPapers = sortPapersByDate();
+      if (window.initPagination) {
+        window.initPagination(sortedPapers);
+        renderPaperCards();
+      } else {
+        renderPaperCards();
+      }
+    });
   </script>
 
 </body>
